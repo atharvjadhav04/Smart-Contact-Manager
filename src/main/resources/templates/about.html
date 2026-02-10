@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+<head>
+    <meta charset="UTF-8">
+    <title>About Smart Contact Manager</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #7c3aed;
+            --accent-color: #06b6d4;
+        }
+        
+        .about-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M500,97C126.7,96.3,0.8,19.8,0,0v100l1000,0V1C1000,19.4,873.3,97.8,500,97z" fill="white"/></svg>');
+            background-size: 100% 100px;
+            background-position: bottom;
+            background-repeat: no-repeat;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-cta {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .hero-cta:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+            transform: translateY(-3px);
+            color: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .features-section {
+            padding: 100px 0;
+            background: #f8fafc;
+        }
+        
+        .section-title {
+            color: #1e293b;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            height: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .feature-title {
+            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .feature-description {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+        
+        .how-it-works {
+            padding: 100px 0;
+            background: white;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            position: relative;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .step-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.1);
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .step-title {
+            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .step-description {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .step-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        .benefits-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .benefit-content h4 {
+            color: #1e293b;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-content p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .cta-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .cta-button.primary {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        
+        .cta-button.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .cta-button.secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: white;
+            transform: translateY(-3px);
+        }
+        
+        .stats-section {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section layout:fragment="content">
+        <!-- Hero Section -->
+        <div class="about-hero">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 text-center">
+                        <h1 class="hero-title">Smart Contact Manager</h1>
+                        <p class="hero-subtitle">
+                            Revolutionize the way you manage contacts. Store, organize, and access your important connections 
+                            anytime, anywhere with our intelligent contact management solution.
+                        </p>
+                        <div class="mt-4">
+                            <a th:href="@{/signup}" class="hero-cta">
+                                <i class="fas fa-rocket"></i> Get Started Free
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="container">
+                <h2 class="section-title">Why Choose Smart Contact Manager?</h2>
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <h3 class="feature-title">Cloud-Based Storage</h3>
+                            <p class="feature-description">
+                                Access your contacts from any device, anywhere. Your data is securely stored in the cloud with automatic backups.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="feature-title">Military-Grade Security</h3>
+                            <p class="feature-description">
+                                Your contact data is protected with end-to-end encryption. We prioritize your privacy and data security above all.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h3 class="feature-title">Lightning Fast</h3>
+                            <p class="feature-description">
+                                Search and organize thousands of contacts in milliseconds. Experience seamless performance with our optimized platform.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="how-it-works">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <div class="step-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h3 class="step-title">Sign Up Free</h3>
+                            <p class="step-description">
+                                Create your account in under 60 seconds. No credit card required to get started.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <div class="step-icon">
+                                <i class="fas fa-address-card"></i>
+                            </div>
+                            <h3 class="step-title">Add Your Contacts</h3>
+                            <p class="step-description">
+                                Import existing contacts or add new ones manually with our intuitive interface.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <div class="step-icon">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <h3 class="step-title">Sync & Access</h3>
+                            <p class="step-description">
+                                Access your contacts from any device. Changes sync automatically across all platforms.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="benefits-section">
+            <div class="container">
+                <h2 class="section-title">Key Benefits</h2>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h4>Cross-Platform Access</h4>
+                                <p>Access your contacts from desktop, tablet, or mobile device. Your data follows you everywhere.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h4>Smart Search</h4>
+                                <p>Find contacts instantly with our intelligent search that works by name, email, phone, or tags.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h4>Growth Ready</h4>
+                                <p>From personal use to business contacts, our platform scales with your needs.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-file-export"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h4>Easy Import/Export</h4>
+                                <p>Import contacts from CSV or export them anytime. You own your data.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h4>Smart Reminders</h4>
+                                <p>Get reminders for follow-ups, birthdays, and important dates related to your contacts.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h4>24/7 Support</h4>
+                                <p>Our support team is always ready to help you with any questions or issues.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-4">
+                        <div class="stat-item">
+                            <span class="stat-number">10K+</span>
+                            <span class="stat-label">Happy Users</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="stat-item">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Uptime</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="stat-item">
+                            <span class="stat-number">256-bit</span>
+                            <span class="stat-label">Encryption</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action Section -->
+        <div class="cta-section">
+            <div class="container">
+                <h2 class="cta-title">Ready to Organize Your Contacts?</h2>
+                <p class="cta-subtitle">
+                    Join thousands of users who have transformed their contact management experience. 
+                    Start your journey today - it's completely free!
+                </p>
+                <div class="cta-buttons">
+                    <a th:href="@{/signup}" class="cta-button primary">
+                        <i class="fas fa-user-plus"></i> Sign Up Free
+                    </a>
+                    <a th:href="@{/login}" class="cta-button secondary">
+                        <i class="fas fa-sign-in-alt"></i> Log In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

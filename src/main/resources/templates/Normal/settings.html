@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Normal/base}">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+
+    <style>
+        /* YOUR STYLING - UNCHANGED */
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        h3 {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .form-control {
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding-right: 50px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .btn {
+            padding: 14px 35px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin: 10px;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+<section layout:fragment="content">
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h3>Change Password</h3>
+
+                <form th:action="@{/user/change-password}" method="post">
+
+                    <!-- Old Password -->
+                    <div class="form-group">
+                        <input name="oldpassword" type="password"
+                               class="form-control"
+                               id="oldPassword"
+                               placeholder="Enter old Password">
+
+                        <button type="button" class="toggle-password"
+                                onclick="togglePassword('oldPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <!-- New Password -->
+                    <div class="form-group">
+                        <input name="newpassword" type="password"
+                               class="form-control"
+                               id="newPassword"
+                               placeholder="Enter new Password">
+
+                        <button type="button" class="toggle-password"
+                                onclick="togglePassword('newPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <div class="container text-center">
+                        <button type="submit" class="btn btn-success">
+                            Change Password
+                        </button>
+                        <button type="reset" class="btn btn-warning">
+                            Reset
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script>
+    // PERFECT TOGGLE LOGIC
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+    }
+</script>
+
+</body>
+</html>

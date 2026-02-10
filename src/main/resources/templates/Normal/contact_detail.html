@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Normal/base}">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Contact Details</title>
+    <style>
+        /* Only style the content section, navbar stays as is */
+        section[layout\\:fragment="content"] {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            min-height: calc(100vh - 120px); /* Account for navbar height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .contact-detail-container {
+            width: 100%;
+            max-width: 700px;
+            margin: auto;
+        }
+        
+        .contact-main-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            border: none;
+            overflow: hidden;
+        }
+        
+        /* Profile Section */
+        .profile-section {
+            background: linear-gradient(135deg, #4a6491 0%, #2c3e50 100%);
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .my_profile_picture {
+            height: 150px !important;
+            width: 150px !important;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+        }
+        
+        .contact-name-display {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+        
+        .contact-id-display {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        
+        /* Info Section */
+        .info-section {
+            padding: 25px;
+        }
+        
+        .info-table {
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .info-table .table {
+            margin-bottom: 0;
+        }
+        
+        .info-table thead {
+            background: linear-gradient(135deg, #5d7cb4 0%, #4a6491 100%);
+        }
+        
+        .info-table thead th {
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1rem;
+        }
+        
+        .info-table tbody tr {
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .info-table tbody th {
+            background: rgba(74, 100, 145, 0.08);
+            font-weight: 600;
+            color: #2c3e50;
+            padding: 12px 15px;
+            width: 30%;
+        }
+        
+        .info-table tbody td {
+            padding: 12px 15px;
+            color: #4a5568;
+        }
+        
+        /* Description Section */
+        .description-section {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #4a6491;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        .description-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .description-content {
+            color: #4a5568;
+            line-height: 1.4;
+            font-size: 0.9rem;
+        }
+        
+        /* Action Buttons */
+        .action-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .btn-action {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            justify-content: center;
+        }
+        
+        .btn-delete {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        
+        .btn-update {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+        
+        /* Access Denied Card */
+        .access-denied-container {
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+        }
+        
+        .access-denied-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            border: none;
+            overflow: hidden;
+        }
+        
+        .access-denied-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            padding: 25px;
+            color: white;
+        }
+        
+        .access-denied-body {
+            padding: 30px 25px;
+            text-align: center;
+        }
+        
+        .access-denied-body .fas.fa-lock {
+            font-size: 4rem;
+            color: #e74c3c;
+            opacity: 0.5;
+            margin-bottom: 15px;
+        }
+        
+        .access-denied-body h3 {
+            color: #e74c3c;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .access-denied-body p {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        
+        .btn-back {
+            background: linear-gradient(135deg, #4a6491 0%, #2c3e50 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 8px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .my_profile_picture {
+                height: 120px !important;
+                width: 120px !important;
+            }
+            
+            .contact-name-display {
+                font-size: 1.5rem;
+            }
+            
+            .info-section {
+                padding: 20px;
+            }
+            
+            .info-table tbody th,
+            .info-table tbody td {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-action {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+        
+        /* For very short screens, reduce padding */
+        @media (max-height: 600px) {
+            .profile-section {
+                padding: 20px 15px;
+            }
+            
+            .info-section {
+                padding: 15px;
+            }
+            
+            .my_profile_picture {
+                height: 100px !important;
+                width: 100px !important;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section layout:fragment="content">
+        
+        <!-- Contact Details Card -->
+        <div th:if="${contact}" class="contact-detail-container">
+            <div class="contact-main-card">
+                
+                <!-- Profile Section -->
+                <div class="profile-section">
+                    <img style="height:200px; width: 200px;" class="my_profile_picture" 
+                        th:src="@{'/img/'+${contact.image}}" src="" alt="profile-photo" />
+                    
+                    <h3 class="mt-3 contact-name-display">
+                        <span th:text="${contact.name}"></span>
+                        <span th:text="${contact.secondName}"></span>
+                    </h3>
+                    
+                    <div class="contact-id-display">
+                        SCMUSER<span th:text="${contact.cId}"></span>
+                    </div>
+                </div>
+                
+                <!-- Information Section -->
+                <div class="info-section">
+                    
+                    <!-- Contact Info Table -->
+                    <div class="info-table">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">#ID</th>
+                                    <th scope="col">SCMUSER<span th:text="${contact.cId}"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Email</th>
+                                    <td><span th:text="${contact.email}"></span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <th scope="row">Phone</th>
+                                    <td><span th:text="${contact.phone}"></span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <th scope="row">Work</th>
+                                    <td><span th:text="${contact.work}"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                     </div>
+                   </div>
+                    
+                    <!-- Description -->
+                    <div class="description mt-3 description-section" th:if="${contact.description}">
+                        <div class="description-title">
+                            Description
+                        </div>
+                        <div class="description-content">
+                            <th:block th:utext="${contact.description}">
+                            </th:block>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="container mt-3 action-section">
+                        <div class="d-flex gap-2 action-buttons">
+                            <!-- Delete Button -->
+                            <a th:href="@{'/user/delete/'+${contact.cId}}" 
+                               class="btn btn-danger btn-sm btn-action btn-delete"
+                               onclick="return confirm('Are you sure you want to delete this contact?')">
+                                <i class="fas fa-trash-alt me-1"></i>Delete
+                            </a>
+                            
+                            <!-- Update Button -->
+                            <form th:method="POST" th:action="@{'/user/update-contact/'+${contact.cId}}" class="ms-2">
+                                <button type="submit" class="btn btn-primary btn-sm btn-action btn-update">
+                                    <i class="fas fa-edit me-1"></i>Update
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <!-- Access Denied Card -->
+        <div th:unless="${contact}" class="access-denied-container">
+            <div class="access-denied-card">
+                <div class="card-header access-denied-header d-flex align-items-center">
+                    <i class="fas fa-shield-alt fa-2x me-3"></i>
+                    <div>
+                        <h4 class="mb-0">Access Restricted</h4>
+                        <small class="opacity-75">Security Alert</small>
+                    </div>
+                </div>
+                <div class="card-body access-denied-body text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-lock fa-5x text-danger opacity-50"></i>
+                    </div>
+                    <h3 class="text-danger mb-3">Access Denied</h3>
+                    <p class="text-muted mb-4">
+                        You don't have permission to view this contact.<br>
+                        This contact may not exist or you may not have the required access rights.
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a th:href="@{/user/show-contacts}" class="btn btn-outline-danger btn-back">
+                            <i class="fas fa-address-book me-2"></i>Back to Contacts
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+</body>
+</html>

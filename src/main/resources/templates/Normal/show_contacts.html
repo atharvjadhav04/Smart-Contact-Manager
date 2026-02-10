@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Normal/base}">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Contacts</title>
+    <style>
+        .contacts-wrapper {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .contacts-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: none;
+            overflow: hidden;
+        }
+        
+        .contacts-header {
+            background: linear-gradient(135deg, #4a6491 0%, #2c3e50 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .contacts-header h1 {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 2rem;
+        }
+        
+        .contacts-subtitle {
+            opacity: 0.85;
+            font-size: 1rem;
+        }
+        
+        .contacts-table {
+            margin: 0;
+        }
+        
+        .contacts-table thead {
+            background: linear-gradient(90deg, #5d7cb4 0%, #4a6491 100%);
+        }
+        
+        .contacts-table thead th {
+            color: white;
+            border: none;
+            font-weight: 500;
+            padding: 16px 12px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .contacts-table tbody tr {
+            transition: all 0.25s ease;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        
+        .contacts-table tbody tr:hover {
+            background-color: rgba(74, 100, 145, 0.05);
+            transform: translateX(4px);
+        }
+        
+        .contacts-table tbody td {
+            padding: 16px 12px;
+            vertical-align: middle;
+            border: none;
+        }
+        
+        .contact-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4a6491;
+            margin-right: 12px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-name {
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 1rem;
+        }
+        
+        .contact-email a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .contact-email a:hover {
+            color: #2980b9;
+            background-color: rgba(52, 152, 219, 0.1);
+            text-decoration: none;
+        }
+        
+        .contact-phone {
+            color: #27ae60;
+            font-weight: 500;
+        }
+        
+        .contact-id {
+            background: linear-gradient(135deg, #ecf0f1 0%, #dfe6e9 100%);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.85rem;
+            display: inline-block;
+            border: 1px solid #d5dbdb;
+        }
+        
+        .action-cell {
+            min-width: 150px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .btn-delete {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .btn-delete:hover {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn-update {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .btn-update:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .pagination-container {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 0 0 12px 12px;
+            border-top: 1px solid #f1f3f5;
+        }
+        
+        .pagination-custom .page-item.active .page-link {
+            background: linear-gradient(135deg, #4a6491 0%, #2c3e50 100%);
+            border-color: #4a6491;
+            color: white;
+        }
+        
+        .pagination-custom .page-link {
+            color: #4a6491;
+            border: 1px solid #dee2e6;
+            margin: 0 2px;
+            border-radius: 6px;
+            padding: 8px 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .pagination-custom .page-link:hover {
+            background-color: rgba(74, 100, 145, 0.1);
+            border-color: #4a6491;
+            color: #2c3e50;
+        }
+        
+        .no-contacts {
+            padding: 60px 20px;
+            text-align: center;
+            color: #7f8c8d;
+        }
+        
+        .no-contacts-icon {
+            font-size: 3.5rem;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+        
+        .table-responsive {
+		    width: 100%;
+		    overflow-x: auto !important;   /* ✅ enable horizontal scroll */
+		    -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Animation for new rows */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .contacts-table tbody tr {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        .contacts-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <section layout:fragment="content">
+    
+        <div class="contacts-wrapper">
+            <div class="container">
+                <div class="contacts-card">
+                    
+                    <!-- Header -->
+                    <div class="contacts-header">
+                        <h1 class="text-center mb-2">
+                            <i class="fas fa-address-book me-2"></i>Your Contacts
+                        </h1>
+                        <p class="text-center contacts-subtitle mb-0">
+                            Manage and organize all your important connections
+                        </p>
+                    </div>
+                    
+                 <!-- Search Contacts -->
+                 <div class="search-container my-4">
+                 
+                 	<input onkeyup="search()" id="search-input" class="form-control" type="text" placeholder="Search your contacts"/>
+                 		<div class="search-result">
+                 			
+                 			
+                 			
+                 		</div>
+                 
+                 </div>
+                    
+                    <!-- Contacts Table -->
+                    <div class="table-responsive">
+                        <table class="table contacts-table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col" style="width: 120px;">#ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col" style="width: 180px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="c : ${contacts}" th:style="'animation-delay: ' + ${cStat.index * 0.05} + 's;'">
+                                    <td>
+                                        <span class="contact-id" th:text="'SCMUSER - '+${c.cId}">SCMUSER - 1</span>
+                                    </td>
+                                    <td>
+                                        <div class="contact-info">
+                                            <img class="contact-avatar" 
+                                                 th:src="@{'/img/'+${c.image}}" 
+                                                 src="" 
+                                                 alt="profile-photo"
+                                                 onerror="this.src='https://ui-avatars.com/api/?name='+encodeURIComponent(this.alt)+'&background=4a6491&color=fff&size=42'"/>
+                                            <span class="contact-name" th:text="${c.name}"></span>
+                                        </div>
+                                    </td>
+                                    <td class="contact-email">
+                                        <a th:href="@{'/user/' + ${c.cId} + '/contact'}">
+                                            <i class="fas fa-envelope me-1"></i>
+                                            <span th:text="${c.email}"></span>
+                                        </a>
+                                    </td>
+                                    <td class="contact-phone">
+                                        <i class="fas fa-phone me-1"></i>
+                                        <span th:text="${c.phone}"></span>
+                                    </td>
+                                    <td class="action-cell">
+                                        <div class="action-buttons">
+                                            <!-- Delete Button -->
+                                            <a th:href="@{'/user/delete/'+${c.cId}}" 
+                                               class="btn btn-delete"
+                                               onclick="return confirm('Are you sure you want to delete this contact?')">
+                                                <i class="fas fa-trash-alt me-1"></i>Delete
+                                            </a>
+                                            
+                                            <!-- Update Button -->
+                                            <form th:method="POST" th:action="@{'/user/update-contact/'+${c.cId}}">
+                                                <button type="submit" class="btn btn-update">
+                                                    <i class="fas fa-edit me-1"></i>Update
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div th:if="${contacts == null or contacts.isEmpty()}" class="no-contacts">
+                        <div class="no-contacts-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="h4 mb-3">No Contacts Found</h3>
+                        <p class="text-muted mb-4">Start by adding your first contact to your list.</p>
+                        <a href="#" th:href="@{/user/add-contact}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Add New Contact
+                        </a>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div th:if="${contacts != null and !contacts.isEmpty()}" class="pagination-container">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination pagination-custom justify-content-center mb-0">
+                                <li th:if="${currentPage != 0}" class="page-item">
+                                    <a th:href="@{'/user/show-contacts/'+${currentPage-1}}" class="page-link" href="#" tabindex="-1">
+                                        <i class="fas fa-chevron-left me-1"></i>Previous
+                                    </a>
+                                </li>
+                                
+                                <li th:classappend="${currentPage==i-1?'active':''}" 
+                                    th:each="i : ${#numbers.sequence(1,totalPages)}" 
+                                    class="page-item">
+                                    <a th:href="@{'/user/show-contacts/'+${i-1}}" class="page-link" href="#">
+                                        <span th:text="${i}"></span>
+                                    </a>
+                                </li>
+                                
+                                <li th:if="${currentPage+1 != totalPages}" class="page-item">
+                                    <a th:href="@{'/user/show-contacts/'+${currentPage+1}}" class="page-link" href="#">
+                                        Next<i class="fas fa-chevron-right ms-1"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <!-- JavaScript for Enhanced Interactions -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add hover effects
+                const rows = document.querySelectorAll('.contacts-table tbody tr');
+                rows.forEach(row => {
+                    row.addEventListener('mouseenter', function() {
+                        this.style.zIndex = '10';
+                    });
+                    
+                    row.addEventListener('mouseleave', function() {
+                        this.style.zIndex = '1';
+                    });
+                });
+                
+                // Enhanced delete confirmation
+                const deleteButtons = document.querySelectorAll('.btn-delete');
+                deleteButtons.forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        if (!confirm('Are you sure you want to delete this contact? This action cannot be undone.')) {
+                            e.preventDefault();
+                        }
+                    });
+                });
+                
+                // Add loading state for buttons
+                const forms = document.querySelectorAll('form');
+                forms.forEach(form => {
+                    form.addEventListener('submit', function() {
+                        const button = this.querySelector('button[type="submit"]');
+                        if (button) {
+                            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Processing...';
+                            button.disabled = true;
+                        }
+                    });
+                });
+            });
+        </script>
+        
+    </section>
+</body>
+</html>

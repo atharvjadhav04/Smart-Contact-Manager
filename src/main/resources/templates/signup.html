@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+<head>
+    <meta charset="UTF-8">
+    <title>SignUp Page</title>
+    
+    <style>
+        /* ========== CARD STYLING ========== */
+        .mycard {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 1;
+            margin: 40px auto;
+            max-width: 800px;
+        }
+
+        
+
+        
+        /* ========== FORM STYLING ========== */
+        .login-body {
+            padding: 40px;
+            background: white;
+        }
+        
+        .text-center.mb-4 {
+            animation: fadeInDown 0.6s ease;
+        }
+        
+        .text-center img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(4, 120, 87, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .text-center h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #047857, #065F46);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 15px 0;
+            letter-spacing: 0.5px;
+        }
+        
+        .text-center p.text-muted {
+            color: #6c757d !important;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        /* ========== FORM STYLING ========== */
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-label span.text-danger {
+            margin-left: 4px;
+            font-weight: 700;
+        }
+        
+        .form-control {
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .form-control:focus {
+            border-color: #047857;
+            box-shadow: 0 0 0 4px rgba(4, 120, 87, 0.15);
+            background: white;
+            transform: translateY(-2px);
+        }
+        
+        .form-control::placeholder {
+            color: #a0aec0;
+            font-weight: 400;
+        }
+        
+        /* ========== VALIDATION STYLES ========== */
+        .form-control.is-invalid {
+            border-color: #ef4444;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23ef4444'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
+        .invalid-feedback {
+            display: block;
+            width: 100%;
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: #ef4444;
+            font-weight: 500;
+            padding-left: 5px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* ========== TEXTAREA ========== */
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        /* ========== CHECKBOX ========== */
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-check-input {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-check-input:checked {
+            background-color: #047857;
+            border-color: #047857;
+        }
+        
+        .form-check-input:focus {
+            box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.25);
+        }
+        
+        .form-check-label {
+            color: #4a5568;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .form-check-label a {
+            color: #047857;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .form-check-label a:hover {
+            color: #065F46;
+            text-decoration: underline;
+        }
+        
+        /* ========== BUTTONS ========== */
+        .btn {
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            min-width: 160px;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.6s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #047857 0%, #065F46 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(4, 120, 87, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #036749 0%, #054d38 100%);
+            box-shadow: 0 8px 25px rgba(4, 120, 87, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .btn-outline-secondary {
+            background: transparent;
+            border: 2px solid #cbd5e0;
+            color: #4a5568;
+        }
+        
+        .btn-outline-secondary:hover {
+            background: #f7fafc;
+            border-color: #a0aec0;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* ========== CREATIVE ALERT MESSAGES ========== */
+        .creative-alert {
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            animation: slideDown 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .creative-alert::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            z-index: 0;
+            border-radius: 16px;
+        }
+        
+        .creative-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border-left: 6px solid #10b981;
+        }
+        
+        .creative-danger {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border-left: 6px solid #ef4444;
+        }
+        
+        .alert-icon {
+            font-size: 2.5rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+            animation: bounce 1s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .success-icon {
+            color: #10b981;
+        }
+        
+        .danger-icon {
+            color: #ef4444;
+            animation: shake 0.5s ease;
+        }
+        
+        .alert-content {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            padding-right: 40px;
+        }
+        
+        .alert-content h5 {
+            margin: 0 0 6px 0;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        
+        .success-content h5 {
+            color: #065f46;
+        }
+        
+        .danger-content h5 {
+            color: #991b1b;
+        }
+        
+        .alert-content p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .success-content p {
+            color: #047857;
+        }
+        
+        .danger-content p {
+            color: #b91c1c;
+        }
+        
+        .close-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.08);
+            border: none;
+            font-size: 1rem;
+            color: inherit;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .close-btn:hover {
+            background: rgba(0, 0, 0, 0.15);
+            transform: translateY(-50%) rotate(90deg);
+        }
+        
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateX(-5px);
+            }
+            20%, 40%, 60%, 80% {
+                transform: translateX(5px);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Optional: Add some sparkle effect for success */
+        .sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2310b981"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>');
+            background-size: contain;
+            opacity: 0;
+            animation: sparkle 2s ease-in-out infinite;
+            z-index: 0;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+        }
+        
+        /* ========== FOOTER LINK ========== */
+        .login-link {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #6c757d;
+            font-size: 15px;
+        }
+        
+        .login-link a {
+            color: #047857;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .login-link a:hover {
+            color: #065F46;
+            text-decoration: underline;
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .mycard {
+                margin: 20px auto;
+            }
+            
+            .login-body {
+                padding: 30px 20px;
+            }
+            
+            .login-title {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                min-width: 140px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .login-body {
+                padding: 25px 15px;
+            }
+            
+            .d-grid.d-md-flex {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .creative-alert {
+                padding: 15px 20px;
+            }
+            
+            .alert-icon {
+                font-size: 2rem;
+                margin-right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <!-- Enhanced Signup Card with same header as login -->
+                    <div class="mycard">
+                        
+                        <!-- Form Body -->
+                        <div class="login-body">
+                        
+                        <!-- Creative Success/Error Messages -->
+                        <div th:if="${message}">
+                            <div th:switch="${message.type}">
+                                <!-- Success Message -->
+                                <div th:case="'alert-success'" class="creative-alert creative-success" id="successMessage">
+                                    <div class="alert-icon success-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="alert-content success-content">
+                                       <!--  <h5>🎉 Registration Successful!</h5> -->
+                                        <p th:text="${message.content}">🎉 Successfully Registered!</p>
+                                        <p style="font-size: 0.9rem; margin-top: 5px;">
+                                            <i class="fas fa-arrow-right"></i> 
+                                            <a th:href="@{/login}" style="color: #059669; text-decoration: none; font-weight: 600;">
+                                                Login to Continue 
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <button type="button" class="close-btn" onclick="this.parentElement.style.display='none'">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- Error Message -->
+                                <div th:case="'alert-danger'" class="creative-alert creative-danger" id="errorMessage">
+                                    <div class="alert-icon danger-icon">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="alert-content danger-content">
+                                        <h5>⚠️ Registration Failed</h5>
+                                        <p th:text="${message.content}">Something went wrong!</p>
+                                        <p style="font-size: 0.9rem; margin-top: 5px;">
+                                            <i class="fas fa-lightbulb"></i> 
+                                            Please check your details and try again.
+                                        </p>
+                                    </div>
+                                    <button type="button" class="close-btn" onclick="this.parentElement.style.display='none'">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- Fallback for other message types -->
+                                <div th:case="*" th:class="${message.type}" 
+                                     class="alert alert-dismissible fade show" role="alert">
+                                    <strong th:text="${message.content}"></strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mb-4">
+                            <img style="width: 100px" th:src="@{/img/member.png}" alt="Member Icon" class="mb-3" />
+                            <h1 class="text-primary">Register Here!</h1>
+                            <p class="text-muted">Create your account to get started</p>
+                        </div>
+                        
+                        <form th:action="@{/do_register}" method="post" th:object="${user}">
+                            
+                            <!-- Name Field -->
+                            <div class="mb-4">
+                                <label for="name" class="form-label">Your Name <span class="text-danger">*</span></label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                       id="name" 
+                                       th:field="*{name}"
+                                       placeholder="Enter your full name">
+                                <div th:errors="*{name}" class="invalid-feedback">
+                                    <span th:each="err : ${#fields.errors('name')}" th:text="${err}"></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Email Field -->
+                            <div class="mb-4">
+                                <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" 
+                                       class="form-control" 
+                                       th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                                       id="email" 
+                                       th:field="*{email}"
+                                       placeholder="example@email.com">
+                                <div th:errors="*{email}" class="invalid-feedback">
+                                    <span th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Password Field -->
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                                <input type="password" 
+                                       class="form-control" 
+                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                                       id="password" 
+                                       th:field="*{password}"
+                                       placeholder="Enter your password">
+                                <div th:errors="*{password}" class="invalid-feedback">
+                                    <span th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
+                                </div>
+                                <div class="form-text mt-2" style="color: #6c757d; font-size: 0.875rem;">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Password must be at least 8 characters long.
+                                </div>
+                            </div>
+                            
+                            <!-- About Field -->
+                            <div class="mb-4">
+                                <label for="about" class="form-label">About Yourself</label>
+                                <textarea class="form-control" 
+                                          id="about" 
+                                          th:field="*{about}"
+                                          rows="4" 
+                                          placeholder="Tell us something about yourself..."></textarea>
+                            </div>
+                            
+                            <!-- Agreement Checkbox -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" 
+                                           class="form-check-input" 
+                                           id="agreement" 
+                                           name="agreement"
+                                           th:checked="${param.agreement != null}">
+                                    <label class="form-check-label" for="agreement">
+                                        I agree to the <a href="#">Terms and Conditions</a>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Submit Buttons -->
+                            <div class="d-grid gap-3 d-md-flex justify-content-md-center mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2">
+                                    <i class="fas fa-user-plus me-2"></i>Register Now
+                                </button>
+                                <button type="reset" class="btn btn-outline-secondary btn-lg px-4">
+                                    <i class="fas fa-redo me-2"></i>Reset Form
+                                </button>
+                            </div>
+                            
+                        </form>
+                        
+                        <div class="login-link">
+                            Already have an account? 
+                            <a th:href="@{/login}">Log In Here</a>
+                        </div>
+                       
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- JavaScript for enhanced message effects -->
+        <script th:if="${message}">
+            // Add some sparkle effects for success message
+            function addSparkleEffects() {
+                const successMsg = document.getElementById('successMessage');
+                if (successMsg) {
+                    // Create sparkles
+                    for (let i = 0; i < 5; i++) {
+                        const sparkle = document.createElement('div');
+                        sparkle.className = 'sparkle';
+                        sparkle.style.left = Math.random() * 100 + '%';
+                        sparkle.style.top = Math.random() * 100 + '%';
+                        sparkle.style.animationDelay = (Math.random() * 2) + 's';
+                        successMsg.style.position = 'relative';
+                        successMsg.appendChild(sparkle);
+                    }
+                    
+                    // Auto-close after 8 seconds for success
+                    setTimeout(() => {
+                        if (successMsg.style.display !== 'none') {
+                            successMsg.style.opacity = '0';
+                            successMsg.style.transform = 'translateY(-20px)';
+                            successMsg.style.transition = 'all 0.5s ease';
+                            setTimeout(() => {
+                                successMsg.style.display = 'none';
+                            }, 500);
+                        }
+                    }, 8000);
+                }
+                
+                // Auto-close error after 10 seconds
+                const errorMsg = document.getElementById('errorMessage');
+                if (errorMsg) {
+                    setTimeout(() => {
+                        if (errorMsg.style.display !== 'none') {
+                            errorMsg.style.opacity = '0';
+                            errorMsg.style.transform = 'translateY(-20px)';
+                            errorMsg.style.transition = 'all 0.5s ease';
+                            setTimeout(() => {
+                                errorMsg.style.display = 'none';
+                            }, 500);
+                        }
+                    }, 10000);
+                }
+            }
+            
+            // Initialize when page loads
+            document.addEventListener('DOMContentLoaded', function() {
+                addSparkleEffects();
+                
+                // Add click sound effect (optional)
+                const closeButtons = document.querySelectorAll('.close-btn');
+                closeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        // You could add a sound effect here
+                        this.parentElement.style.opacity = '0';
+                        this.parentElement.style.transform = 'translateY(-20px)';
+                        this.parentElement.style.transition = 'all 0.5s ease';
+                        setTimeout(() => {
+                            this.parentElement.style.display = 'none';
+                        }, 500);
+                    });
+                });
+                
+                // Add animation to form elements
+                const formGroups = document.querySelectorAll('.mb-4');
+                formGroups.forEach((group, index) => {
+                    group.style.animationDelay = `${index * 0.1}s`;
+                    group.style.animation = 'fadeInUp 0.5s ease forwards';
+                    group.style.opacity = '0';
+                });
+                
+                // Add styles for fadeInUp animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes fadeInUp {
+                        from {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            });
+        </script>
+        
+        <!-- Font Awesome for icons -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    </section>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+<head>
+    <meta charset="UTF-8">
+    <title>SignUp Page</title>
+    
+    <style>
+        /* ========== CARD STYLING ========== */
+        .mycard {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 1;
+            margin: 40px auto;
+            max-width: 800px;
+        }
+        
+     
+        
+        /* ========== FORM STYLING ========== */
+        .login-body {
+            padding: 40px;
+            background: white;
+        }
+        
+        .text-center.mb-4 {
+            animation: fadeInDown 0.6s ease;
+        }
+        
+        .text-center img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(4, 120, 87, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .text-center h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #047857, #065F46);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 15px 0;
+            letter-spacing: 0.5px;
+        }
+        
+        .text-center p.text-muted {
+            color: #6c757d !important;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        /* ========== FORM STYLING ========== */
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-label span.text-danger {
+            margin-left: 4px;
+            font-weight: 700;
+        }
+        
+        .form-control {
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .form-control:focus {
+            border-color: #047857;
+            box-shadow: 0 0 0 4px rgba(4, 120, 87, 0.15);
+            background: white;
+            transform: translateY(-2px);
+        }
+        
+        .form-control::placeholder {
+            color: #a0aec0;
+            font-weight: 400;
+        }
+        
+        /* ========== VALIDATION STYLES ========== */
+        .form-control.is-invalid {
+            border-color: #ef4444;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23ef4444'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
+        .invalid-feedback {
+            display: block;
+            width: 100%;
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: #ef4444;
+            font-weight: 500;
+            padding-left: 5px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* ========== TEXTAREA ========== */
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        /* ========== CHECKBOX ========== */
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-check-input {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-check-input:checked {
+            background-color: #047857;
+            border-color: #047857;
+        }
+        
+        .form-check-input:focus {
+            box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.25);
+        }
+        
+        .form-check-label {
+            color: #4a5568;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .form-check-label a {
+            color: #047857;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .form-check-label a:hover {
+            color: #065F46;
+            text-decoration: underline;
+        }
+        
+        /* ========== BUTTONS ========== */
+        .btn {
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            min-width: 160px;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.6s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #047857 0%, #065F46 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(4, 120, 87, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #036749 0%, #054d38 100%);
+            box-shadow: 0 8px 25px rgba(4, 120, 87, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .btn-outline-secondary {
+            background: transparent;
+            border: 2px solid #cbd5e0;
+            color: #4a5568;
+        }
+        
+        .btn-outline-secondary:hover {
+            background: #f7fafc;
+            border-color: #a0aec0;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* ========== CREATIVE ALERT MESSAGES ========== */
+        .creative-alert {
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            animation: slideDown 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .creative-alert::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            z-index: 0;
+            border-radius: 16px;
+        }
+        
+        .creative-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border-left: 6px solid #10b981;
+        }
+        
+        .creative-danger {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border-left: 6px solid #ef4444;
+        }
+        
+        .alert-icon {
+            font-size: 2.5rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+            animation: bounce 1s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .success-icon {
+            color: #10b981;
+        }
+        
+        .danger-icon {
+            color: #ef4444;
+            animation: shake 0.5s ease;
+        }
+        
+        .alert-content {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            padding-right: 40px;
+        }
+        
+        .alert-content h5 {
+            margin: 0 0 6px 0;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        
+        .success-content h5 {
+            color: #065f46;
+        }
+        
+        .danger-content h5 {
+            color: #991b1b;
+        }
+        
+        .alert-content p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .success-content p {
+            color: #047857;
+        }
+        
+        .danger-content p {
+            color: #b91c1c;
+        }
+        
+        .close-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.08);
+            border: none;
+            font-size: 1rem;
+            color: inherit;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .close-btn:hover {
+            background: rgba(0, 0, 0, 0.15);
+            transform: translateY(-50%) rotate(90deg);
+        }
+        
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateX(-5px);
+            }
+            20%, 40%, 60%, 80% {
+                transform: translateX(5px);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Optional: Add some sparkle effect for success */
+        .sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2310b981"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>');
+            background-size: contain;
+            opacity: 0;
+            animation: sparkle 2s ease-in-out infinite;
+            z-index: 0;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+        }
+        
+        /* ========== FOOTER LINK ========== */
+        .login-link {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #6c757d;
+            font-size: 15px;
+        }
+        
+        .login-link a {
+            color: #047857;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .login-link a:hover {
+            color: #065F46;
+            text-decoration: underline;
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .mycard {
+                margin: 20px auto;
+            }
+            
+            .login-body {
+                padding: 30px 20px;
+            }
+            
+            .login-title {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                min-width: 140px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .login-body {
+                padding: 25px 15px;
+            }
+            
+            .d-grid.d-md-flex {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .creative-alert {
+                padding: 15px 20px;
+            }
+            
+            .alert-icon {
+                font-size: 2rem;
+                margin-right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    Enhanced Signup Card with same header as login
+                    <div class="mycard">
+                        
+                        Form Body
+                        <div class="login-body">
+                        
+                        Creative Success/Error Messages
+                        <div th:if="${message}">
+                            <div th:switch="${message.type}">
+                                Success Message
+                                <div th:case="'alert-success'" class="creative-alert creative-success" id="successMessage">
+                                    <div class="alert-icon success-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="alert-content success-content">
+                                        <h5>🎉 Registration Successful!</h5>
+                                        <p th:text="${message.content}">Successfully Registered!</p>
+                                        <p style="font-size: 0.9rem; margin-top: 5px;">
+                                            <i class="fas fa-arrow-right"></i> 
+                                            <a th:href="@{/login}" style="color: #059669; text-decoration: none; font-weight: 600;">
+                                                Login to Continue 
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <button type="button" class="close-btn" onclick="this.parentElement.style.display='none'">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                
+                                Error Message
+                                <div th:case="'alert-danger'" class="creative-alert creative-danger" id="errorMessage">
+                                    <div class="alert-icon danger-icon">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="alert-content danger-content">
+                                        <h5>⚠️ Registration Failed</h5>
+                                        <p th:text="${message.content}">Something went wrong!</p>
+                                        <p style="font-size: 0.9rem; margin-top: 5px;">
+                                            <i class="fas fa-lightbulb"></i> 
+                                            Please check your details and try again.
+                                        </p>
+                                    </div>
+                                    <button type="button" class="close-btn" onclick="this.parentElement.style.display='none'">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                
+                                Fallback for other message types
+                                <div th:case="*" th:class="${message.type}" 
+                                     class="alert alert-dismissible fade show" role="alert">
+                                    <strong th:text="${message.content}"></strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mb-4">
+                            <img style="width: 100px" th:src="@{/img/member.png}" alt="Member Icon" class="mb-3" />
+                            <h1 style="color: #000;">Register Here!</h1>
+                            <p class="text-muted">Create your account to get started</p>
+                        </div>
+                        
+                        <form th:action="@{/do_register}" method="post" th:object="${user}">
+                            
+                            Name Field
+                            <div class="mb-4">
+                                <label for="name" class="form-label">Your Name <span class="text-danger">*</span></label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                       id="name" 
+                                       th:field="*{name}"
+                                       placeholder="Enter your full name">
+                                <div th:errors="*{name}" class="invalid-feedback">
+                                    <span th:each="err : ${#fields.errors('name')}" th:text="${err}"></span>
+                                </div>
+                            </div>
+                            
+                            Email Field
+                            <div class="mb-4">
+                                <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" 
+                                       class="form-control" 
+                                       th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                                       id="email" 
+                                       th:field="*{email}"
+                                       placeholder="example@email.com">
+                                <div th:errors="*{email}" class="invalid-feedback">
+                                    <span th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
+                                </div>
+                            </div>
+                            
+                            Password Field
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                                <input type="password" 
+                                       class="form-control" 
+                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                                       id="password" 
+                                       th:field="*{password}"
+                                       placeholder="Enter your password">
+                                <div th:errors="*{password}" class="invalid-feedback">
+                                    <span th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
+                                </div>
+                                <div class="form-text mt-2" style="color: #6c757d; font-size: 0.875rem;">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Password must be at least 8 characters long.
+                                </div>
+                            </div>
+                            
+                            About Field
+                            <div class="mb-4">
+                                <label for="about" class="form-label">About Yourself</label>
+                                <textarea class="form-control" 
+                                          id="about" 
+                                          th:field="*{about}"
+                                          rows="4" 
+                                          placeholder="Tell us something about yourself..."></textarea>
+                            </div>
+                            
+                            Agreement Checkbox
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" 
+                                           class="form-check-input" 
+                                           id="agreement" 
+                                           name="agreement"
+                                           th:checked="${param.agreement != null}">
+                                    <label class="form-check-label" for="agreement">
+                                        I agree to the <a href="#">Terms and Conditions</a>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            Submit Buttons
+                            <div class="d-grid gap-3 d-md-flex justify-content-md-center mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2">
+                                    <i class="fas fa-user-plus me-2"></i>Register Now
+                                </button>
+                                <button type="reset" class="btn btn-outline-secondary btn-lg px-4">
+                                    <i class="fas fa-redo me-2"></i>Reset Form
+                                </button>
+                            </div>
+                            
+                        </form>
+                        
+                        <div class="login-link">
+                            Already have an account? 
+                            <a th:href="@{/login}">Log In Here</a>
+                        </div>
+                       
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        JavaScript for enhanced message effects
+        <script th:if="${message}">
+            // Add some sparkle effects for success message
+            function addSparkleEffects() {
+                const successMsg = document.getElementById('successMessage');
+                if (successMsg) {
+                    // Create sparkles
+                    for (let i = 0; i < 5; i++) {
+                        const sparkle = document.createElement('div');
+                        sparkle.className = 'sparkle';
+                        sparkle.style.left = Math.random() * 100 + '%';
+                        sparkle.style.top = Math.random() * 100 + '%';
+                        sparkle.style.animationDelay = (Math.random() * 2) + 's';
+                        successMsg.style.position = 'relative';
+                        successMsg.appendChild(sparkle);
+                    }
+                    
+                    // Auto-close after 8 seconds for success
+                    setTimeout(() => {
+                        if (successMsg.style.display !== 'none') {
+                            successMsg.style.opacity = '0';
+                            successMsg.style.transform = 'translateY(-20px)';
+                            successMsg.style.transition = 'all 0.5s ease';
+                            setTimeout(() => {
+                                successMsg.style.display = 'none';
+                            }, 500);
+                        }
+                    }, 8000);
+                }
+                
+                // Auto-close error after 10 seconds
+                const errorMsg = document.getElementById('errorMessage');
+                if (errorMsg) {
+                    setTimeout(() => {
+                        if (errorMsg.style.display !== 'none') {
+                            errorMsg.style.opacity = '0';
+                            errorMsg.style.transform = 'translateY(-20px)';
+                            errorMsg.style.transition = 'all 0.5s ease';
+                            setTimeout(() => {
+                                errorMsg.style.display = 'none';
+                            }, 500);
+                        }
+                    }, 10000);
+                }
+            }
+            
+            // Initialize when page loads
+            document.addEventListener('DOMContentLoaded', function() {
+                addSparkleEffects();
+                
+                // Add click sound effect (optional)
+                const closeButtons = document.querySelectorAll('.close-btn');
+                closeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        // You could add a sound effect here
+                        this.parentElement.style.opacity = '0';
+                        this.parentElement.style.transform = 'translateY(-20px)';
+                        this.parentElement.style.transition = 'all 0.5s ease';
+                        setTimeout(() => {
+                            this.parentElement.style.display = 'none';
+                        }, 500);
+                    });
+                });
+                
+                // Add animation to form elements
+                const formGroups = document.querySelectorAll('.mb-4');
+                formGroups.forEach((group, index) => {
+                    group.style.animationDelay = `${index * 0.1}s`;
+                    group.style.animation = 'fadeInUp 0.5s ease forwards';
+                    group.style.opacity = '0';
+                });
+                
+                // Add styles for fadeInUp animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes fadeInUp {
+                        from {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            });
+        </script>
+        
+        Font Awesome for icons
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    </section>
+</body>
+</html> -->

@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE" th:text="${title}">Base Template</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    
+    <!-- Your custom CSS -->
+    <link rel="stylesheet" th:href="@{/CSS/style.css}" />
+    
+    <style>
+        /* Creative Alert Message Styles */
+        .creative-alert {
+            border: none;
+            border-radius: 15px;
+            padding: 20px 25px 20px 70px;
+            margin: 25px auto;
+            max-width: 90%;
+            position: relative;
+            overflow: hidden;
+            animation: slideInBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border-left: none;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+        }
+        
+        @keyframes slideInBounce {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.9);
+            }
+            70% {
+                transform: translateY(10px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        @keyframes fadeOutUp {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+        }
+        
+        .creative-alert.fade-out {
+            animation: fadeOutUp 0.5s ease forwards;
+        }
+        
+        .creative-alert::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .creative-alert::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            z-index: 0;
+            border-radius: 15px;
+        }
+        
+        .alert-success-creative {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(52, 152, 219, 0.1) 100%);
+            border: 2px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        .alert-success-creative::before {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            content: '✓';
+            font-family: 'Font Awesome 6 Free';
+            content: '\f00c';
+        }
+        
+        .alert-danger-creative {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.15) 0%, rgba(255, 107, 107, 0.1) 100%);
+            border: 2px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .alert-danger-creative::before {
+            background: linear-gradient(135deg, #dc3545 0%, #ff6b6b 100%);
+            content: '✗';
+            font-family: 'Font Awesome 6 Free';
+            content: '\f00d';
+        }
+        
+        .alert-info-creative {
+            background: linear-gradient(135deg, rgba(23, 162, 184, 0.15) 0%, rgba(86, 204, 242, 0.1) 100%);
+            border: 2px solid rgba(23, 162, 184, 0.3);
+        }
+        
+        .alert-info-creative::before {
+            background: linear-gradient(135deg, #17a2b8 0%, #56ccf2 100%);
+            font-family: 'Font Awesome 6 Free';
+            content: '\f05a';
+        }
+        
+        .alert-warning-creative {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 220, 115, 0.1) 100%);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+        }
+        
+        .alert-warning-creative::before {
+            background: linear-gradient(135deg, #ffc107 0%, #ffd773 100%);
+            font-family: 'Font Awesome 6 Free';
+            content: '\f071';
+            color: #856404;
+        }
+        
+        .creative-alert-content {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            padding-right: 30px;
+            font-weight: 500;
+            font-size: 1.05rem;
+            line-height: 1.4;
+        }
+        
+        .creative-alert-close {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: inherit;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 2;
+        }
+        
+        .creative-alert-close:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.2);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .creative-alert-close i {
+            font-size: 14px;
+        }
+        
+        .alert-success-creative .creative-alert-close {
+            color: #155724;
+        }
+        
+        .alert-danger-creative .creative-alert-close {
+            color: #721c24;
+        }
+        
+        .alert-info-creative .creative-alert-close {
+            color: #0c5460;
+        }
+        
+        .alert-warning-creative .creative-alert-close {
+            color: #856404;
+        }
+        
+        /* Progress bar for auto-dismiss */
+        .alert-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            animation: progressBar 3s linear forwards;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        @keyframes progressBar {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        
+        /* Floating notification style */
+        .creative-alert.floating {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1050;
+            max-width: 400px;
+            animation: slideInRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin: 0;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* ========== MAIN LAYOUT STRUCTURE - FIXED ========== */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+        
+        /* Container to hold everything except footer */
+        .page-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Main content area that pushes footer down */
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 30px; /* Space for sidebar toggle button */
+        }
+        
+        /* Actual content area with spacing */
+        .content-area {
+            flex: 1;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Container inside content area with proper spacing */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* ========== SIDEBAR STYLES ========== */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2c3e50 0%, #4a6491 100%);
+            position: fixed;
+            top: 0;
+            left: -280px;
+            height: 100vh;
+            z-index: 1060;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.3);
+            padding-top: 80px;
+            overflow-y: auto;
+            display: block !important;
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .crossbtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1061;
+        }
+        
+        .crossbtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+        
+        .sidebar .item {
+            display: flex;
+            align-items: center;
+            padding: 18px 25px;
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 8px 15px;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar .item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, #3498db, #2ecc71);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .sidebar .item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar .item:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .sidebar .item.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+        
+        .sidebar .item.active::before {
+            transform: scaleY(1);
+        }
+        
+        .sidebar .item i {
+            font-size: 22px;
+            width: 40px;
+            text-align: center;
+            margin-right: 15px;
+            color: #3498db;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar .item:hover i,
+        .sidebar .item.active i {
+            color: #2ecc71;
+            transform: scale(1.1);
+        }
+        
+        .sidebar .item span {
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-logo {
+            text-align: center;
+            padding: 20px 15px 30px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .sidebar-logo h3 {
+            color: white;
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .sidebar-logo p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            margin: 5px 0 0 0;
+            letter-spacing: 1px;
+        }
+        
+        .sidebar-footer {
+            margin-top: auto; /* Push to bottom of sidebar */
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1059;
+            backdrop-filter: blur(3px);
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        /* ========== SIDEBAR TOGGLE BUTTON ========== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a6491, #2c3e50);
+            border: none;
+            color: white;
+            font-size: 26px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1050;
+        }
+        
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+        }
+        
+        .sidebar-toggle-label {
+            position: fixed;
+            top: 100px;
+            left: 90px;
+            color: #4a6491;
+            font-weight: 600;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: fadeIn 0.3s ease;
+            white-space: nowrap;
+            z-index: 1050;
+        }
+        
+        .sidebar-toggle-btn:hover + .sidebar-toggle-label {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* ========== NAVBAR STYLES ========== */
+        .custom-navbar {
+            background: linear-gradient(90deg, #2c3e50 0%, #4a6491 100%);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 15px 0;
+            position: relative;
+            z-index: 1040;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 26px;
+            background: linear-gradient(90deg, #ffffff, #f8f9fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-link {
+            font-weight: 600;
+            padding: 12px 22px !important;
+            border-radius: 8px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.95) !important;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(46, 204, 113, 0.3));
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .nav-link i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        /* User name styling */
+        .nav-item:has(span[th\\:text*="user.name"]) .nav-link {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.3), rgba(142, 68, 173, 0.3));
+            font-weight: 700;
+        }
+        
+        /* Logout button styling */
+        .nav-item:last-child .nav-link {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(192, 57, 43, 0.3));
+        }
+        
+        .nav-item:last-child .nav-link:hover {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.5), rgba(192, 57, 43, 0.5));
+        }
+        
+        /* Footer Enhancement - Always at bottom */
+        footer {
+            background: linear-gradient(90deg, #2c3e50 0%, #4a6491 100%);
+            padding: 20px 0;
+            color: white;
+            margin-top: auto;
+        }
+        
+        /* Make sure content inside layout fragment has proper spacing */
+        main.container.my-4 {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        div[layout\\:fragment="content"] {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* When sidebar is active, push content */
+        body.sidebar-open .content-wrapper {
+            margin-left: 280px;
+            transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .navbar-brand {
+                font-size: 22px;
+            }
+            
+            .nav-link {
+                padding: 10px 15px !important;
+                font-size: 14px;
+            }
+            
+            .sidebar-toggle-btn {
+                top: 85px;
+                left: 15px;
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+            
+            .sidebar-toggle-label {
+                top: 95px;
+                left: 80px;
+            }
+            
+            .content-area {
+                padding: 25px 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+                left: -250px;
+            }
+            
+            body.sidebar-open .content-wrapper {
+                margin-left: 0;
+            }
+            
+            .sidebar-toggle-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 22px;
+                top: 80px;
+            }
+            
+            .sidebar-toggle-label {
+                top: 90px;
+                left: 75px;
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            
+            .sidebar .item {
+                padding: 15px 20px;
+                margin: 5px 10px;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .navbar-brand {
+                font-size: 20px;
+            }
+            
+            .content-area {
+                padding: 20px 10px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 18px;
+            }
+            
+            .nav-link {
+                padding: 8px 12px !important;
+                font-size: 13px;
+                margin: 2px;
+            }
+            
+            .nav-link i {
+                font-size: 16px;
+                margin-right: 5px;
+            }
+            
+            .sidebar-toggle-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+                top: 75px;
+            }
+            
+            .sidebar-toggle-label {
+                display: none !important;
+            }
+            
+            .content-area {
+                padding: 15px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <span class="crossbtn" onclick="toggleSidebar()">&times;</span>
+        
+        <!-- Sidebar Logo -->
+        <div class="sidebar-logo">
+            <h3><i class="fas fa-address-book me-2 "></i>SCM</h3>
+            <p>Smart Contact Manager</p>
+        </div>
+        
+        <!-- Sidebar Menu Items -->
+        <a href="#" th:href="@{/user/index}" class="item">
+            <i class="fas fa-home-lg-alt"></i>
+            <span>Home</span>
+        </a>
+        <a th:href="@{/user/show-contacts}" class="item">
+            <i class="fas fa-address-card"></i>
+            <span>View Contacts</span>
+        </a>
+        <a href="#" th:href="@{/user/add-contact}" class="item">
+            <i class="fas fa-user-plus"></i>
+            <span>Add Contact</span>
+        </a>
+        <a href="#" th:href="@{/user/profile}" class="item">
+            <i class="fas fa-user-circle"></i>
+            <span>Your Profile</span>
+        </a>
+        <a th:href="@{/user/settings}" href="#" class="item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+        <a href="#" th:href="@{/logout}" class="item">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a>
+        
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+            <p>Smart Contact Manager</p>
+            <p>v1.0.0</p>
+        </div>
+    </div>
+
+    <!-- Page Wrapper -->
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#" th:href="@{/user/index}">
+                    <i class="fas fa-address-book me-2"></i>Smart Contact Manager
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto text-uppercase">
+                        <li class="nav-item">
+                            <a class="nav-link active" th:href="@{/user/index}">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href='#' th:href="@{/user/profile}">
+                                <i class="fas fa-user me-1"></i><span th:text="${user.name}"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/logout}">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- SIDEBAR TOGGLE BUTTON -->
+        <button class="sidebar-toggle-btn" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="sidebar-toggle-label">Open Menu</div>
+        
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <div class="content-area">
+                <div class="main-container">
+                    <!-- Creative Message Box -->
+                    <div th:if="${message != null}" 
+                         class="creative-alert fade show alert-dismissible" 
+                         th:classappend="'alert-' + ${message.type} + '-creative'"
+                         role="alert"
+                         id="creativeMessage">
+                        <div class="creative-alert-content" th:text="${message.content}"></div>
+                        <div class="alert-progress"></div>
+                        <button type="button" class="creative-alert-close" data-bs-dismiss="alert" aria-label="Close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Session Message (backward compatibility) -->
+                    <div th:if="${session.message != null and message == null}" 
+                         class="creative-alert fade show alert-dismissible" 
+                         th:classappend="'alert-' + ${session.message.type} + '-creative'"
+                         role="alert"
+                         id="creativeSessionMessage">
+                        <div class="creative-alert-content" th:text="${session.message.content}"></div>
+                        <div class="alert-progress"></div>
+                        <button type="button" class="creative-alert-close" data-bs-dismiss="alert" aria-label="Close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <!-- Page Content -->
+                    <main class="container my-4">
+                        <div layout:fragment="content">
+                            <!-- This will be replaced by content from child templates -->
+                            <h1>Default Content</h1>
+                            <p>This is default content that will be replaced.</p>
+                            <div style="height: 800px;">
+                                <p>Scroll to see footer at bottom</p>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+        <div class="container">
+            <p>&copy; 2025 Smart Contact Manager. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Toggle Sidebar Function
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            const body = document.body;
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            body.classList.toggle('sidebar-open');
+            
+            // Update button label
+            const toggleLabel = document.querySelector('.sidebar-toggle-label');
+            if (toggleLabel) {
+                toggleLabel.textContent = sidebar.classList.contains('active') ? 'Close Menu' : 'Open Menu';
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Close sidebar when clicking on overlay
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (overlay) {
+                overlay.addEventListener('click', toggleSidebar);
+            }
+            
+            // Alert Messages Auto-dismiss
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.creative-alert.fade.show');
+                alerts.forEach(function(alert) {
+                    alert.classList.add('fade-out');
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                        alert.classList.remove('fade', 'show');
+                    }, 500);
+                });
+            }, 5000);
+            
+            // Close button functionality for alerts
+            const closeButtons = document.querySelectorAll('.creative-alert-close');
+            closeButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const alert = this.closest('.creative-alert');
+                    alert.classList.add('fade-out');
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                        alert.classList.remove('fade', 'show');
+                    }, 500);
+                });
+            });
+            
+            // Make messages floating on larger screens
+            if (window.innerWidth > 992) {
+                const alerts = document.querySelectorAll('.creative-alert');
+                alerts.forEach(function(alert) {
+                    alert.classList.add('floating');
+                });
+            }
+            
+            // Set active sidebar item based on current page
+            const currentPath = window.location.pathname;
+            const sidebarItems = document.querySelectorAll('.sidebar .item');
+            
+            sidebarItems.forEach(function(item) {
+                if (item.getAttribute('th:href')) {
+                    const href = item.getAttribute('th:href').replace('@{', '').replace('}', '');
+                    if (currentPath.includes(href) || 
+                        (href === '/user/index' && currentPath === '/user/index')) {
+                        item.classList.add('active');
+                    }
+                }
+            });
+            
+            // Set active navbar item
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(function(link) {
+                if (link.getAttribute('th:href')) {
+                    const href = link.getAttribute('th:href').replace('@{', '').replace('}', '');
+                    if (currentPath.includes(href)) {
+                        link.classList.add('active');
+                    }
+                }
+            });
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.querySelector('.sidebar-toggle-btn');
+            
+            if (window.innerWidth <= 768 && 
+                sidebar.classList.contains('active') &&
+                !sidebar.contains(event.target) &&
+                !toggleBtn.contains(event.target)) {
+                toggleSidebar();
+            }
+        });
+        
+        // Close sidebar with ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const sidebar = document.querySelector('.sidebar');
+                if (sidebar.classList.contains('active')) {
+                    toggleSidebar();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

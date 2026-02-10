@@ -1,0 +1,206 @@
+body{
+	background: #e2e2e2!important;
+}
+
+.bg-primary{
+	background: #009688 !important;
+}
+
+.banner{
+	width: 100%;
+	height: 93vh;
+	background: linear-gradient(rgba(0,0,0,.8),rgba(0,0,0,.8)),url(../img/call.jpg);
+	background-size:cover;
+	color: white;
+	
+} 
+
+
+
+.mycard{
+	padding: 20px;
+	background: #FFFFFF
+}
+
+.auth-page{
+	margin-bottom: 60px;
+}
+
+
+
+
+/* Add to your style.css file */
+.custom-navbar {
+    background-color: #198754 !important; /* Bootstrap green color */
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%) !important;
+}
+
+/* If you want to keep the green color from your screenshots */
+/* Use this exact green color: */
+.navbar.bg-primary {
+    background-color: #28a745 !important; /* Green */
+    background: linear-gradient(to right, #28a745, #20c997) !important;
+}
+
+/* sidebar style*/
+/* Main layout for sticky footer */
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            flex: 1;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #f8f9fa;
+            z-index: 1000;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .content {
+            transition: margin-left 0.3s;
+            min-height: calc(100vh - 120px); /* Adjust based on navbar and footer height */
+        }
+        
+        /* Spacing between icons and text */
+        .sidebar .item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar .item:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar .item i {
+            margin-right: 15px; /* Space between icon and text */
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #495057;
+        }
+        
+        .crossbtn {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            padding: 5px 10px;
+        }
+        
+        /* Footer at bottom */
+        footer {
+            margin-top: auto; /* Push footer to bottom */
+        }
+        
+.my_profile_picture{
+	width: 35px;
+	height: 35px;
+	object-fit:cover;
+	border-radius:50%;
+	border:1px solid black;
+}
+
+
+
+ .image-preview-container {
+        position: relative;
+        min-height: 200px;
+    }
+    
+    .current-image-wrapper,
+    .new-image-preview {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 10px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 2px solid #dee2e6;
+    }
+    
+    .profile-image-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .current-image-wrapper:hover .image-overlay,
+    .new-image-preview:hover .image-overlay {
+        opacity: 1;
+    }
+    
+    .empty-image-state {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 10px;
+        border: 2px dashed #dee2e6;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+    
+    .image-placeholder {
+        text-align: center;
+        color: #6c757d;
+    }
+    
+    .image-info {
+        text-align: center;
+        font-size: 0.85rem;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    /* search css*/
+    .search-container{
+    	position:relative;
+    }
+    
+    .search-result{
+    position:absolute
+    background: white;
+    width: 100%;
+    padding:10px;
+    border:1px solid gray;
+    
+    }

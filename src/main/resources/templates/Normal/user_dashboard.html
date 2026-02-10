@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Normal/base}">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .dashboard-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: none;
+            background: white;
+        }
+        
+        .welcome-section {
+            background: var(--primary-gradient);
+            padding: 60px 30px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            object-fit: cover;
+            margin: 0 auto 25px;
+        }
+        
+        .welcome-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        
+        .cta-button {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            text-decoration: none;
+        }
+        
+        .cta-button:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            color: white;
+        }
+        
+        .cta-button i {
+            margin-right: 10px;
+            font-size: 1.4rem;
+        }
+        
+        .guidelines-section {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 50px 30px;
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+        
+        .section-title {
+            color: #495057;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+        
+        .guide-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            height: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+        
+        .guide-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .guide-icon {
+            width: 60px;
+            height: 60px;
+            background: #f0f4ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .guide-title {
+            color: #495057;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .guide-content {
+            color: #6c757d;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .action-buttons {
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .action-btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px 30px;
+            text-decoration: none;
+            color: #495057;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 180px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .action-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.1);
+        }
+        
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: #f0f4ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .action-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .action-desc {
+            color: #6c757d;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        
+        .policy-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+        
+        .policy-title {
+            color: #495057;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .policy-title i {
+            margin-right: 15px;
+            color: #667eea;
+        }
+        
+        .policy-item {
+            margin-bottom: 20px;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .policy-item::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .policy-text {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .welcome-text {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .cta-button {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            
+            .action-btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container py-5">
+            <!-- Welcome Card -->
+            <div class="dashboard-card mb-5">
+                <div class="welcome-section">
+                    <img class="profile-avatar" 
+                         th:src="@{'/img/user.png'}" 
+                         alt="Profile Photo" />
+                    
+                    <h1 class="welcome-text" id="greetingText">Welcome, <span th:text="${user.name}">User</span>! 👋</h1>
+                    <p class="subtitle">Your personal contact management system</p>
+                    
+                    <a th:href="@{/user/add-contact}" class="cta-button">
+                        <i class="fas fa-plus-circle"></i> Add New Contact
+                    </a>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <div class="action-btn-group">
+                        <a th:href="@{/user/add-contact}" class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="action-title">Add Contact</div>
+                            <div class="action-desc">Create new contact</div>
+                        </a>
+                        
+                        <a th:href="@{/user/show-contacts}" class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-address-book"></i>
+                            </div>
+                            <div class="action-title">View Contacts</div>
+                            <div class="action-desc">Browse all contacts</div>
+                        </a>
+                        
+                        <a th:href="@{/user/profile}" class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="action-title">My Profile</div>
+                            <div class="action-desc">View profile</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Guidelines Section -->
+            <div class="guidelines-section">
+                <h2 class="section-title">Getting Started Guide 📚</h2>
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="guide-card">
+                            <div class="guide-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h3 class="guide-title">Add Contacts</h3>
+                            <p class="guide-content">
+                                Click "Add New Contact" to create contact entries. Include name, email, phone, and optional profile pictures for better organization.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="guide-card">
+                            <div class="guide-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <h3 class="guide-title">Manage & Update</h3>
+                            <p class="guide-content">
+                                Keep contact information current. Use the update feature to modify details and the delete option to remove outdated contacts.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="guide-card">
+                            <div class="guide-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="guide-title">Secure Access</h3>
+                            <p class="guide-content">
+                                Your data is encrypted and secure. Log out after each session, especially on shared devices, to protect your information.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- JavaScript for dynamic greeting -->
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the greeting element
+            const greetingElement = document.getElementById('greetingText');
+            if (greetingElement) {
+                // Get current hour
+                const hour = new Date().getHours();
+                let greeting = '';
+                let emoji = '';
+                
+                // Determine greeting based on time
+                if (hour >= 5 && hour < 12) {
+                    greeting = 'Good Morning';
+                    emoji = '☀️';
+                } else if (hour >= 12 && hour < 17) {
+                    greeting = 'Good Afternoon';
+                    emoji = '🌤️';
+                } else if (hour >= 17 && hour < 21) {
+                    greeting = 'Good Evening';
+                    emoji = '🌙';
+                } else {
+                    greeting = 'Good Night';
+                    emoji = '✨';
+                }
+                
+                // Get user name from Thymeleaf span or use default
+                const userNameSpan = greetingElement.querySelector('span');
+                const userName = userNameSpan ? userNameSpan.textContent : 'User';
+                
+                // Update the greeting text
+                greetingElement.innerHTML = `${greeting}, <span>${userName}</span>! ${emoji}`;
+            }
+            
+            // Add smooth hover effects to cards
+            const guideCards = document.querySelectorAll('.guide-card');
+            guideCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.boxShadow = '0 15px 35px rgba(0,0,0,0.1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.05)';
+                });
+            });
+        });
+        </script>
+    </section>
+</body>
+</html>

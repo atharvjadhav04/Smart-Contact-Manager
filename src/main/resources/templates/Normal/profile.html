@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Normal/base}">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Profile</title>
+    <style>
+        .profile-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: none;
+        }
+        
+        .profile-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .profile-picture {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .profile-picture:hover {
+            transform: scale(1.05);
+        }
+        
+        .profile-name {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        
+        .profile-email {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin: -30px 20px 20px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .info-table {
+            background: transparent;
+            border: none;
+        }
+        
+        .info-table thead th {
+            border: none;
+            background: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .info-table tbody tr {
+            border-bottom: 1px solid #f1f3f5;
+            transition: background-color 0.2s ease;
+        }
+        
+        .info-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .info-table tbody th {
+            color: #6c757d;
+            font-weight: 500;
+            padding: 15px;
+            width: 35%;
+            vertical-align: middle;
+        }
+        
+        .info-table tbody td {
+            padding: 15px;
+            font-weight: 500;
+            color: #212529;
+            vertical-align: middle;
+        }
+        
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .badge-active {
+            background-color: #d1f7c4;
+            color: #0d6b2d;
+        }
+        
+        .badge-inactive {
+            background-color: #ffeaea;
+            color: #c62828;
+        }
+        
+        .user-id-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: #f0f4ff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .about-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .about-title {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .about-content {
+            color: #6c757d;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+ 
+        
+        /* Floating Action Button for Mobile */
+        .floating-add-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .floating-add-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+        
+        /* Add Contact Card */
+        .add-contact-card {
+            position: absolute;
+            top: 90px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            width: 200px;
+            z-index: 20;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .add-contact-card.show {
+            display: block;
+        }
+        
+        .add-contact-card a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: #495057;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+        
+        .add-contact-card a:hover {
+            background: #f8f9fa;
+            color: #667eea;
+        }
+        
+        .add-contact-card i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            width: 30px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .add-contact-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                top: 15px;
+                right: 15px;
+            }
+            
+            .profile-name {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-7">
+                    <div class="card profile-card">
+                        <!-- Profile Header -->
+                        <div class="profile-header">
+
+                            
+                            <img style="height:180px; width: 180px;" class="profile-picture" 
+                                 th:src="@{'/img/user.png'}" 
+                                 alt="Profile Photo" />
+                            
+                            <h1 class="profile-name" th:text="${user.name}"></h1>
+                            <p class="profile-email" th:text="${user.email}"></p>
+                            
+                            <div class="user-id-badge">
+                                <i class="fas fa-id-card me-2"></i>USER ID: SCMUSER<span th:text="${user.id}"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Info -->
+                        <div class="info-card">
+                            <table class="table info-table">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="d-flex align-items-center">
+                                                <div class="info-icon">
+                                                    <i class="fas fa-envelope"></i>
+                                                </div>
+                                                <span>Email Address</span>
+                                            </div>
+                                        </th>
+                                        <td>
+                                            <span th:text="${user.email}"></span>
+                                            <small class="d-block text-muted mt-1">Primary contact email</small>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="d-flex align-items-center">
+                                                <div class="info-icon">
+                                                    <i class="fas fa-user-tag"></i>
+                                                </div>
+                                                <span>Role</span>
+                                            </div>
+                                        </th>
+                                        <td>
+                                            <span class="badge bg-primary" th:text="${user.role}"></span>
+                                            <small class="d-block text-muted mt-1">System access permissions</small>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="d-flex align-items-center">
+                                                <div class="info-icon">
+                                                    <i class="fas fa-shield-alt"></i>
+                                                </div>
+                                                <span>Account Status</span>
+                                            </div>
+                                        </th>
+                                        <td>
+                                            <span th:if="${user.enabled == true}" 
+                                                  class="badge-status badge-active">
+                                                <i class="fas fa-check-circle me-1"></i> Active
+                                            </span>
+                                            <span th:unless="${user.enabled == true}" 
+                                                  class="badge-status badge-inactive">
+                                                <i class="fas fa-times-circle me-1"></i> Inactive
+                                            </span>
+                                            <small class="d-block text-muted mt-1">Account accessibility status</small>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <!-- About Section -->
+                            <div class="about-section mt-4">
+                                <h6 class="about-title">
+                                    <i class="fas fa-info-circle me-2"></i> About You
+                                </h6>
+                                <div class="about-content" th:text="${user.about} ?: 'No information provided yet.'">
+                                    No information provided yet.
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="text-center mt-4 pt-3 border-top">
+
+              
+                                <a th:href="@{/user/editProfile/{id}(id=${user.id})}" class="btn btn-outline-primary ms-2">
+                                    <i class="fas fa-edit me-2"></i> Edit Profile
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Cards with Add Contact Option -->
+                    <div class="row mt-4">
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-center h-100 border-0 shadow-sm hover-shadow">
+                                <div class="card-body">
+                                    <i class="fas fa-address-book fa-2x text-primary mb-3"></i>
+                                    <h4 class="mb-1">My Contacts</h4>
+                                    <p class="text-muted mb-3">View and manage your contacts</p>
+                                    <a th:href="@{/user/show-contacts}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> View All
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-center h-100 border-0 shadow-sm hover-shadow">
+                                <div class="card-body">
+                                    <i class="fas fa-plus-circle fa-2x text-success mb-3"></i>
+                                    <h4 class="mb-1">Add Contact</h4>
+                                    <p class="text-muted mb-3">Create a new contact entry</p>
+                                    <a th:href="@{/user/add-contact}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-plus me-1"></i> Add New
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-center h-100 border-0 shadow-sm hover-shadow">
+                                <div class="card-body">
+                                    <i class="fas fa-cog fa-2x text-info mb-3"></i>
+                                    <h4 class="mb-1">Settings</h4>
+                                    <p class="text-muted mb-3">Update your preferences</p>
+									<a th:href="@{/user/settings}"
+									   class="btn btn-outline-info btn-sm">
+									    <i class="fas fa-sliders-h me-1"></i> Configure
+									</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Add Button (Mobile) -->
+        <a th:href="@{/user/add-contact}" class="floating-add-btn d-md-none">
+            <i class="fas fa-plus"></i>
+        </a>
+        
+        <!-- Optional JavaScript for enhanced Add Contact dropdown -->
+        <script>
+        // Optional: Toggle add contact dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const addContactBtn = document.querySelector('.add-contact-btn');
+            const addContactCard = document.querySelector('.add-contact-card');
+            
+            if (addContactBtn && addContactCard) {
+                addContactBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    addContactCard.classList.toggle('show');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!addContactBtn.contains(e.target) && !addContactCard.contains(e.target)) {
+                        addContactCard.classList.remove('show');
+                    }
+                });
+            }
+            
+            // Add hover shadow effect to cards
+            const cards = document.querySelectorAll('.hover-shadow');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+                    this.style.boxShadow = '0 15px 35px rgba(0,0,0,0.1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.08)';
+                });
+            });
+        });
+        </script>
+    </section>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Normal/base}">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update-Contact</title>
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container py-4">
+            <div class="contact-form-container">
+                <div class="form-header">
+                    <h2><i class="fas fa-user-plus"></i>   Update Your Contact</h2>
+                    <p class="text-muted">Edit the details below to Update contact</p>
+                </div>
+                
+               <form class="mt-2" th:object="${contact}" method="POST" th:action="@{/user/process-update}" enctype="multipart/form-data" id="contactForm">
+                    <input type="hidden"  th:value="${contact.cId}" name="cId" />
+                    <!-- Personal Information Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Personal Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- First Name -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label required-field">First Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        <input th:value="${contact.name}" type="text" 
+                                               class="form-control" 
+                                               id="name" 
+                                               name="name" 
+                                               placeholder="Enter first name" 
+                                               required
+                                               th:field="*{name}">
+                                    </div>
+                                    <div class="form-text">Enter the contact's first name</div>
+                                </div>
+                                
+                                <!-- Last Name -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="secondName" class="form-label">Last Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user-friends"></i></span>
+                                        <input th:value="${contact.secondName}" type="text" 
+                                               class="form-control" 
+                                               id="secondName" 
+                                               name="secondName" 
+                                               placeholder="Enter last name"
+                                               th:field="*{secondName}">
+                                    </div>
+                                    <div class="form-text">Enter the contact's last name (optional)</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Work/Profession -->
+                            <div class="mb-3">
+                                <label for="work" class="form-label">Work / Profession</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                    <input th:value="${contact.work}" type="text" 
+                                           class="form-control" 
+                                           id="work" 
+                                           name="work" 
+                                           placeholder="Enter profession or job title"
+                                           th:field="*{work}">
+                                </div>
+                                <div class="form-text">Example: Software Engineer, Doctor, Teacher, etc.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Information Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-address-book me-2"></i>Contact Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Email -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label required-field">Email Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                        <input th:value="${contact.email}" type="email" 
+                                               class="form-control" 
+                                               id="email" 
+                                               name="email" 
+                                               placeholder="example@email.com" 
+                                               required
+                                               th:field="*{email}">
+                                    </div>
+                                    <div class="form-text">Enter a valid email address</div>
+                                </div>
+                                
+                                <!-- Phone -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label required-field">Phone Number</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        <input th:value="${contact.phone}" type="tel" 
+                                               class="form-control" 
+                                               id="phone" 
+                                               name="phone" 
+                                               placeholder="Enter phone number" 
+                                               required
+                                               th:field="*{phone}"
+                                               pattern="[0-9]{10}" 
+                                               title="Please enter a 10-digit phone number">
+                                    </div>
+                                    <div class="form-text">Enter 10-digit phone number without country code</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Image Upload Section -->
+                    <div class="card mb-4">
+                       <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-image me-2"></i>Profile Image</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <!-- Image Preview -->
+                                <div class="col-md-4 mb-3">
+                                    <div class="image-preview" id="imagePreview">
+                                        <!-- Show existing image if available -->
+                                        <img id="previewImage" 
+                                             th:if="${contact.image != null and contact.image != ''}"
+                                             th:src="@{'/img/' + ${contact.image}}" 
+                                             alt="Current Profile Image"
+                                             style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                        
+                                        <!-- Show placeholder if no image exists -->
+                                        <div id="previewText" 
+                                             th:unless="${contact.image != null and contact.image != ''}"
+                                             style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                                            <i class="fas fa-user-circle fa-4x mb-2"></i>
+                                            <p>No image selected</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- File Upload -->
+                                <div class="col-md-8 mb-3">
+                                    <label for="image" class="form-label">Upload New Profile Picture</label>
+                                    <div class="input-group">
+                                        <input type="file" 
+                                               class="form-control" 
+                                               id="image" 
+                                               name="profileimage" 
+                                               accept="image/*">
+                                        <label class="input-group-text" for="image">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                        </label>
+                                    </div>
+                                    <div class="form-text">
+                                        Supported formats: JPG, PNG, GIF. Max size: 2MB
+                                    </div>
+                                    <div class="mt-2">
+                                        <!-- Hidden input to track if image should be cleared -->
+                                        <input type="hidden" id="clearImageFlag" name="clearImageFlag" value="false">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" id="clearImageBtn">
+                                            <i class="fas fa-times me-1"></i>Clear Image
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <!-- Description Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Additional Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description / Notes</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-sticky-note"></i></span>
+                                    <textarea class="form-control" 
+                                              id="description" 
+                                              name="description" 
+                                              rows="5" 
+                                              placeholder="Enter any additional information about this contact..."
+                                              th:field="*{description}"
+                                              maxlength="50000"></textarea>
+                                </div>
+                                <div class="form-text">
+                                    You can add notes, meeting details, or any other relevant information.
+                                    <span id="charCount" class="text-muted float-end">0/50000 characters</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a th:href="@{/user/add-contact}" class="btn btn-outline-secondary form-btn">
+                            <i class="fas fa-times me-1"></i>Clear Form
+                        </a>
+                        
+                        <div>
+                            <a th:href="@{/user/index}" class="btn btn-outline-danger me-2 form-btn">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary form-btn">
+                                <i class="fas fa-save me-1"></i>Update Contact
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </section>
+    
+    <!-- Form JavaScript -->
+    <script>
+    // Image preview functionality
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('previewImage');
+        const previewText = document.getElementById('previewText');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                // Hide the preview text
+                if (previewText) {
+                    previewText.style.display = 'none';
+                }
+                
+                // If preview image doesn't exist, create it
+                if (!preview) {
+                    const imagePreviewDiv = document.getElementById('imagePreview');
+                    const img = document.createElement('img');
+                    img.id = 'previewImage';
+                    img.src = e.target.result;
+                    img.alt = "Image Preview";
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    img.style.display = 'block';
+                    imagePreviewDiv.appendChild(img);
+                } else {
+                    // Update existing preview image
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    // Clear image preview
+    function clearImage() {
+        // Clear file input
+        const fileInput = document.getElementById('image');
+        if (fileInput) {
+            fileInput.value = '';
+        }
+        
+        // Set clear image flag
+        const clearImageFlag = document.getElementById('clearImageFlag');
+        if (clearImageFlag) {
+            clearImageFlag.value = 'true';
+        }
+        
+        // Remove preview image if it exists
+        const preview = document.getElementById('previewImage');
+        if (preview) {
+            preview.style.display = 'none';
+            preview.src = '';
+            // You could also remove the element entirely if preferred
+            // preview.remove();
+        }
+        
+        // Show preview text
+        const previewText = document.getElementById('previewText');
+        if (previewText) {
+            previewText.style.display = 'flex';
+        }
+        
+        console.log('Image cleared');
+    }
+    
+    // Character counter for description
+    const descriptionInput = document.getElementById('description');
+    if (descriptionInput) {
+        descriptionInput.addEventListener('input', function() {
+            const charCount = this.value.length;
+            const charCountElement = document.getElementById('charCount');
+            if (charCountElement) {
+                charCountElement.textContent = `${charCount}/50000 characters`;
+            }
+        });
+    }
+    
+    // Clear entire form
+    function clearForm() {
+        if (confirm('Are you sure you want to clear all form data?')) {
+            // Method 1: Reset HTML form (may not clear Thymeleaf-bound fields)
+            document.getElementById('contactForm').reset();
+            
+            // Method 2: Manually clear each input (more reliable)
+            document.getElementById('name').value = '';
+            document.getElementById('secondName').value = '';
+            document.getElementById('work').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('description').value = '';
+            
+            // Clear file input
+            const fileInput = document.getElementById('image');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+            
+            // Clear image preview
+            clearImage();
+            
+            // Reset character count
+            const charCountElement = document.getElementById('charCount');
+            if (charCountElement) {
+                charCountElement.textContent = '0/50000 characters';
+            }
+            
+            // Reset clear image flag
+            const clearImageFlag = document.getElementById('clearImageFlag');
+            if (clearImageFlag) {
+                clearImageFlag.value = 'false';
+            }
+            
+            // Force Thymeleaf to re-evaluate by focusing and blurring fields
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.focus();
+                input.blur();
+            });
+        }
+    }
+    
+    // Form validation
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            
+            // Phone validation
+            const phonePattern = /^[0-9]{10}$/;
+            if (!phonePattern.test(phone)) {
+                e.preventDefault();
+                alert('Please enter a valid 10-digit phone number');
+                document.getElementById('phone').focus();
+                return false;
+            }
+            
+            // Email validation
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                e.preventDefault();
+                alert('Please enter a valid email address');
+                document.getElementById('email').focus();
+                return false;
+            }
+            
+            // File size validation (optional)
+            const fileInput = document.getElementById('image');
+            if (fileInput && fileInput.files[0]) {
+                const fileSize = fileInput.files[0].size / 1024 / 1024; // in MB
+                if (fileSize > 2) {
+                    e.preventDefault();
+                    alert('File size should be less than 2MB');
+                    return false;
+                }
+            }
+            
+            return true;
+        });
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set up image preview for file input
+        const fileInput = document.getElementById('image');
+        if (fileInput) {
+            fileInput.addEventListener('change', previewImage);
+        }
+        
+        // Set up clear image button
+        const clearImageBtn = document.getElementById('clearImageBtn');
+        if (clearImageBtn) {
+            clearImageBtn.addEventListener('click', clearImage);
+        }
+        
+        // Initialize character count
+        const descTextarea = document.getElementById('description');
+        if (descTextarea) {
+            const charCount = descTextarea.value.length;
+            const charCountElement = document.getElementById('charCount');
+            if (charCountElement) {
+                charCountElement.textContent = `${charCount}/50000 characters`;
+            }
+        }
+        
+        // Add CSS for image preview container
+        const style = document.createElement('style');
+        style.textContent = `
+            .image-preview {
+                width: 250px;
+                height: 250px;
+                border: 2px dashed #ddd;
+                border-radius: 8px;
+                overflow: hidden;
+                position: relative;
+                background-color: #f8f9fa;
+            }
+            
+            #previewText {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                color: #6c757d;
+            }
+            
+            #previewImage {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        `;
+        document.head.appendChild(style);
+    });
+    </script>
+</body>
+</html>

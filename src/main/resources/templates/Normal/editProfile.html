@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Normal/base}">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+    
+    <style>
+        /* Modern Gradient Background */
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .edit-profile-container {
+            max-width: 600px;
+            margin: 40px auto;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Modern Card Design */
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: none;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Card Header Gradient */
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+        
+        .profile-card-body {
+            padding: 40px;
+        }
+        
+        /* Title Styling */
+        .profile-title {
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 30px !important;
+            position: relative;
+            padding-bottom: 15px;
+            text-align: center;
+        }
+        
+        .profile-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        /* Form Group Styling */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        /* Form Labels */
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-label i {
+            margin-right: 10px;
+            color: #667eea;
+            font-size: 18px;
+        }
+        
+        /* Modern Input Fields */
+        .form-control {
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            color: #2d3748;
+            font-weight: 500;
+            width: 100%;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+            transform: translateY(-2px);
+        }
+        
+        .form-control::placeholder {
+            color: #a0aec0;
+            font-weight: normal;
+        }
+        
+        /* Textarea specific styling */
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        /* Button Container */
+        .button-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            padding: 0;
+        }
+        
+        /* Modern Buttons */
+        .btn {
+            padding: 14px 35px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            min-width: 140px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Primary Button */
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4290 100%);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* Secondary Button */
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #5a6268 0%, #343a40 100%);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* Animation for form elements */
+        .form-group {
+            animation: slideUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .form-group:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        
+        .form-group:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .form-group:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+        
+        .button-container {
+            animation: slideUp 0.5s ease-out 0.4s both;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Profile Picture Section */
+        .profile-picture-section {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideUp 0.5s ease-out both;
+        }
+        
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-picture:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .change-picture-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .change-picture-btn:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4290 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* Character Counter for About */
+        .char-counter {
+            text-align: right;
+            font-size: 12px;
+            color: #a0aec0;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+        
+        .char-counter.warning {
+            color: #f5576c;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .edit-profile-container {
+                margin: 20px auto;
+                padding: 0 15px;
+            }
+            
+            .profile-card-body {
+                padding: 30px 20px;
+            }
+            
+            .profile-title {
+                font-size: 24px;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                min-width: 120px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .form-control {
+                padding: 12px 15px;
+            }
+            
+            .profile-picture {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="edit-profile-container">
+            <div class="profile-card">
+                <div class="profile-card-body">
+                    <h3 class="profile-title mb-3">Edit Your Profile</h3>
+                    
+<!--                     Profile Picture Section
+                    <div class="profile-picture-section">
+                        <img th:src="@{/img/profile-placeholder.png}" alt="Profile Picture" class="profile-picture" />
+                        <button type="button" class="change-picture-btn">
+                            <i class="fas fa-camera"></i>
+                            <span>Change Picture</span>
+                        </button>
+                    </div> -->
+                    
+                    <!-- Edit Profile Form -->
+                    <form th:action="@{/user/process-editProfile}" 
+                          method="post" 
+                          th:object="${user}"
+                          id="editProfileForm">
+                        
+                        <!-- Hidden ID -->
+                        <input type="hidden" th:field="*{id}">
+                        
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-user"></i>
+                                Your Name
+                            </label>
+                            <input type="text" 
+                                   class="form-control"
+                                   th:field="*{name}"
+                                   placeholder="Enter your full name"
+                                   required>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-envelope"></i>
+                                Email Address
+                            </label>
+                            <input type="email" 
+                                   class="form-control"
+                                   th:field="*{email}"
+                                   placeholder="example@email.com"
+                                   required>
+                        </div>
+                        
+                        <!-- About -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-info-circle"></i>
+                                About Yourself
+                            </label>
+                            <textarea class="form-control"
+                                      th:field="*{about}"
+                                      placeholder="Tell us something about yourself..."
+                                      maxlength="500"
+                                      rows="4"></textarea>
+                            <div class="char-counter" id="charCounter">
+                                <span id="charCount">0</span>/500 characters
+                            </div>
+                        </div>
+                        
+                        <div class="button-container">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>
+                                Update Profile
+                            </button>
+<!--                             <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                                <i class="fas fa-redo me-2"></i>
+                                Reset Form
+                            </button> -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    
+    <script>
+        // Character counter for About field
+        document.addEventListener('DOMContentLoaded', function() {
+            const aboutTextarea = document.querySelector('textarea[th\\:field="*{about}"]');
+            const charCounter = document.getElementById('charCounter');
+            const charCount = document.getElementById('charCount');
+            
+            if (aboutTextarea && charCounter && charCount) {
+                // Set initial count
+                const initialValue = aboutTextarea.value;
+                charCount.textContent = initialValue.length;
+                
+                // Update counter on input
+                aboutTextarea.addEventListener('input', function() {
+                    const length = this.value.length;
+                    charCount.textContent = length;
+                    
+                    // Add warning class when approaching limit
+                    if (length > 450) {
+                        charCounter.classList.add('warning');
+                    } else {
+                        charCounter.classList.remove('warning');
+                    }
+                });
+            }
+            
+            // Form validation
+            const form = document.getElementById('editProfileForm');
+            if (form) {
+                form.addEventListener('submit', function(event) {
+                    const nameInput = this.querySelector('input[th\\:field="*{name}"]');
+                    const emailInput = this.querySelector('input[th\\:field="*{email}"]');
+                    
+                    if (!nameInput.value.trim()) {
+                        event.preventDefault();
+                        showToast('Please enter your name', 'warning');
+                        nameInput.focus();
+                        return false;
+                    }
+                    
+                    if (!emailInput.value.trim()) {
+                        event.preventDefault();
+                        showToast('Please enter your email', 'warning');
+                        emailInput.focus();
+                        return false;
+                    }
+                    
+                    // Email validation
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(emailInput.value)) {
+                        event.preventDefault();
+                        showToast('Please enter a valid email address', 'warning');
+                        emailInput.focus();
+                        return false;
+                    }
+                    
+                    // Show success message
+                });
+            }
+            
+            // Change profile picture button
+            const changePicBtn = document.querySelector('.change-picture-btn');
+            if (changePicBtn) {
+                changePicBtn.addEventListener('click', function() {
+                    showToast('Profile picture upload feature coming soon!', 'info');
+                });
+            }
+        });
+        
+        // Reset form function
+        function resetForm() {
+            const form = document.getElementById('editProfileForm');
+            if (form) {
+                form.reset();
+                
+                // Reset character counter
+                const charCount = document.getElementById('charCount');
+                const charCounter = document.getElementById('charCounter');
+                if (charCount && charCounter) {
+                    charCount.textContent = '0';
+                    charCounter.classList.remove('warning');
+                }
+                
+                showToast('Form has been reset', 'info');
+            }
+        }
+        
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `toast-notification toast-${type}`;
+            toast.innerHTML = `
+                <div class="toast-content">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            // Add styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .toast-notification {
+                    position: fixed;
+                    top: 100px;
+                    right: 20px;
+                    background: ${type === 'success' ? 'linear-gradient(135deg, #d1fae5, #a7f3d0)' : 
+                                 type === 'warning' ? 'linear-gradient(135deg, #fee2e2, #fecaca)' : 
+                                 'linear-gradient(135deg, #dbeafe, #bfdbfe)'};
+                    color: ${type === 'success' ? '#065f46' : 
+                            type === 'warning' ? '#991b1b' : 
+                            '#1e40af'};
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                    z-index: 9999;
+                    animation: slideInRight 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    border-left: 4px solid ${type === 'success' ? '#10b981' : 
+                                         type === 'warning' ? '#ef4444' : 
+                                         '#3b82f6'};
+                }
+                
+                @keyframes slideInRight {
+                    from {
+                        opacity: 0;
+                        transform: translateX(100px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                }
+                
+                .toast-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                
+                .toast-content i {
+                    font-size: 20px;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Add to body
+            document.body.appendChild(toast);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease forwards';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                    document.head.removeChild(style);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

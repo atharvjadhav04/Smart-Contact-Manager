@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+    <section layout:fragment="content" class="banner d-flex justify-content-center align-items-center">
+        <div class="text-center">
+            <h1 class="font-weight-bold">Smart Contact Manager</h1>
+            <p>
+             Start Collecting your contacts in very smarter way. We provide 
+             very efficient and smarter way of handling contacts.
+            </p>
+            
+            <form th:action="@{/login}" method="get">
+   				 <button type="submit" class="btn btn-primary btn-lg text-white">
+        			Get Started
+    			</button>
+			</form>
+          
+        </div>
+    </section>
+</body>
+</html>

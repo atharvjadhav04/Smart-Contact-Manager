@@ -271,10 +271,6 @@ public class Usercontroller {
 	  return "redirect:/user/index";
   }
   
-  
-  
-  
-  
   //edit profile handler
   @GetMapping("/editProfile/{id}")
   public String editProfile(@PathVariable("id") Integer id,Model model){

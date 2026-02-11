@@ -450,6 +450,13 @@
                                
                                 </div>
                             </div>
+
+                            <div th:if="${param.logout}" class="alert-custom alert-success">
+                                <i class="fas fa-check-circle"></i>
+                                <span th:text="${param.change}" class="fw-semibold"></span>
+                            </div>
+
+
                             
                             <!-- Login Form -->
                             <form th:action="@{/login}" method="post" id="loginForm">
@@ -500,7 +507,7 @@
                                         <span class="checkbox-custom"></span>
                                         <span class="remember-label">Remember me</span>
                                     </label>
-                                    <a href="#" class="forgot-link" id="forgotPassword">
+                                    <a th:href="@{/forgot}" href="#" class="forgot-link" id="forgotPassword">
                                         <i class="fas fa-question-circle me-1"></i> Forgot Password?
                                     </a>
                                 </div>

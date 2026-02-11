@@ -638,7 +638,7 @@
                                 <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2">
                                     <i class="fas fa-user-plus me-2"></i>Register Now
                                 </button>
-                                <button type="reset" class="btn btn-outline-secondary btn-lg px-4">
+                                <button type="reset" class="btn btn-warning btn-lg px-4">
                                     <i class="fas fa-redo me-2"></i>Reset Form
                                 </button>
                             </div>
@@ -785,7 +785,7 @@
 <head>
     <meta charset="UTF-8">
     <title>SignUp Page</title>
-    
+
     <style>
         /* ========== CARD STYLING ========== */
         .mycard {
@@ -799,19 +799,19 @@
             margin: 40px auto;
             max-width: 800px;
         }
-        
-     
-        
+
+
+
         /* ========== FORM STYLING ========== */
         .login-body {
             padding: 40px;
             background: white;
         }
-        
+
         .text-center.mb-4 {
             animation: fadeInDown 0.6s ease;
         }
-        
+
         .text-center img {
             width: 100px;
             height: 100px;
@@ -819,17 +819,17 @@
             filter: drop-shadow(0 4px 8px rgba(4, 120, 87, 0.3));
             animation: float 3s ease-in-out infinite;
         }
-        
+
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
-        
+
         @keyframes pulse {
             0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
             50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
         }
-        
+
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -840,7 +840,7 @@
                 transform: translateY(0);
             }
         }
-        
+
         .text-center h1 {
             font-size: 2.5rem;
             font-weight: 800;
@@ -851,13 +851,13 @@
             margin: 15px 0;
             letter-spacing: 0.5px;
         }
-        
+
         .text-center p.text-muted {
             color: #6c757d !important;
             font-size: 1.1rem;
             font-weight: 400;
         }
-        
+
         /* ========== FORM STYLING ========== */
         .form-label {
             font-weight: 600;
@@ -867,12 +867,12 @@
             display: flex;
             align-items: center;
         }
-        
+
         .form-label span.text-danger {
             margin-left: 4px;
             font-weight: 700;
         }
-        
+
         .form-control {
             padding: 14px 18px;
             border: 2px solid #e2e8f0;
@@ -883,19 +883,19 @@
             color: #2d3748;
             font-weight: 500;
         }
-        
+
         .form-control:focus {
             border-color: #047857;
             box-shadow: 0 0 0 4px rgba(4, 120, 87, 0.15);
             background: white;
             transform: translateY(-2px);
         }
-        
+
         .form-control::placeholder {
             color: #a0aec0;
             font-weight: 400;
         }
-        
+
         /* ========== VALIDATION STYLES ========== */
         .form-control.is-invalid {
             border-color: #ef4444;
@@ -905,7 +905,7 @@
             background-position: right calc(0.375em + 0.1875rem) center;
             background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
         }
-        
+
         .invalid-feedback {
             display: block;
             width: 100%;
@@ -916,21 +916,21 @@
             padding-left: 5px;
             animation: fadeIn 0.3s ease;
         }
-        
+
         /* ========== TEXTAREA ========== */
         textarea.form-control {
             min-height: 120px;
             resize: vertical;
             font-family: inherit;
         }
-        
+
         /* ========== CHECKBOX ========== */
         .form-check {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         .form-check-input {
             width: 20px;
             height: 20px;
@@ -939,34 +939,34 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .form-check-input:checked {
             background-color: #047857;
             border-color: #047857;
         }
-        
+
         .form-check-input:focus {
             box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.25);
         }
-        
+
         .form-check-label {
             color: #4a5568;
             font-size: 14px;
             cursor: pointer;
         }
-        
+
         .form-check-label a {
             color: #047857;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .form-check-label a:hover {
             color: #065F46;
             text-decoration: underline;
         }
-        
+
         /* ========== BUTTONS ========== */
         .btn {
             padding: 14px 30px;
@@ -984,7 +984,7 @@
             justify-content: center;
             gap: 8px;
         }
-        
+
         .btn::before {
             content: '';
             position: absolute;
@@ -995,36 +995,36 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: 0.6s;
         }
-        
+
         .btn:hover::before {
             left: 100%;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #047857 0%, #065F46 100%);
             color: white;
             box-shadow: 0 6px 20px rgba(4, 120, 87, 0.3);
         }
-        
+
         .btn-primary:hover {
             background: linear-gradient(135deg, #036749 0%, #054d38 100%);
             box-shadow: 0 8px 25px rgba(4, 120, 87, 0.4);
             transform: translateY(-3px);
         }
-        
+
         .btn-outline-secondary {
             background: transparent;
             border: 2px solid #cbd5e0;
             color: #4a5568;
         }
-        
+
         .btn-outline-secondary:hover {
             background: #f7fafc;
             border-color: #a0aec0;
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
-        
+
         /* ========== CREATIVE ALERT MESSAGES ========== */
         .creative-alert {
             border-radius: 16px;
@@ -1038,7 +1038,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .creative-alert::after {
             content: '';
             position: absolute;
@@ -1050,17 +1050,17 @@
             z-index: 0;
             border-radius: 16px;
         }
-        
+
         .creative-success {
             background: linear-gradient(135deg, #d1fae5, #a7f3d0);
             border-left: 6px solid #10b981;
         }
-        
+
         .creative-danger {
             background: linear-gradient(135deg, #fee2e2, #fecaca);
             border-left: 6px solid #ef4444;
         }
-        
+
         .alert-icon {
             font-size: 2.5rem;
             margin-right: 20px;
@@ -1069,51 +1069,51 @@
             position: relative;
             z-index: 1;
         }
-        
+
         .success-icon {
             color: #10b981;
         }
-        
+
         .danger-icon {
             color: #ef4444;
             animation: shake 0.5s ease;
         }
-        
+
         .alert-content {
             position: relative;
             z-index: 1;
             flex: 1;
             padding-right: 40px;
         }
-        
+
         .alert-content h5 {
             margin: 0 0 6px 0;
             font-weight: 700;
             font-size: 1.25rem;
         }
-        
+
         .success-content h5 {
             color: #065f46;
         }
-        
+
         .danger-content h5 {
             color: #991b1b;
         }
-        
+
         .alert-content p {
             margin: 0;
             font-size: 0.95rem;
             line-height: 1.5;
         }
-        
+
         .success-content p {
             color: #047857;
         }
-        
+
         .danger-content p {
             color: #b91c1c;
         }
-        
+
         .close-btn {
             position: absolute;
             right: 15px;
@@ -1134,12 +1134,12 @@
             transition: all 0.3s ease;
             z-index: 2;
         }
-        
+
         .close-btn:hover {
             background: rgba(0, 0, 0, 0.15);
             transform: translateY(-50%) rotate(90deg);
         }
-        
+
         /* Animations */
         @keyframes slideDown {
             from {
@@ -1151,7 +1151,7 @@
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% {
                 transform: translateY(0);
@@ -1163,7 +1163,7 @@
                 transform: translateY(-5px);
             }
         }
-        
+
         @keyframes shake {
             0%, 100% {
                 transform: translateX(0);
@@ -1175,12 +1175,12 @@
                 transform: translateX(5px);
             }
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        
+
         /* Optional: Add some sparkle effect for success */
         .sparkle {
             position: absolute;
@@ -1192,7 +1192,7 @@
             animation: sparkle 2s ease-in-out infinite;
             z-index: 0;
         }
-        
+
         @keyframes sparkle {
             0%, 100% {
                 opacity: 0;
@@ -1203,7 +1203,7 @@
                 transform: scale(1) rotate(180deg);
             }
         }
-        
+
         /* ========== FOOTER LINK ========== */
         .login-link {
             text-align: center;
@@ -1213,7 +1213,7 @@
             color: #6c757d;
             font-size: 15px;
         }
-        
+
         .login-link a {
             color: #047857;
             text-decoration: none;
@@ -1221,51 +1221,51 @@
             margin-left: 5px;
             transition: all 0.3s ease;
         }
-        
+
         .login-link a:hover {
             color: #065F46;
             text-decoration: underline;
         }
-        
+
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .mycard {
                 margin: 20px auto;
             }
-            
+
             .login-body {
                 padding: 30px 20px;
             }
-            
+
             .login-title {
                 font-size: 2rem;
             }
-            
+
             .btn {
                 padding: 12px 25px;
                 min-width: 140px;
             }
         }
-        
+
         @media (max-width: 576px) {
             .login-body {
                 padding: 25px 15px;
             }
-            
+
             .d-grid.d-md-flex {
                 flex-direction: column;
                 gap: 10px;
             }
-            
+
             .btn {
                 width: 100%;
                 max-width: 300px;
             }
-            
+
             .creative-alert {
                 padding: 15px 20px;
             }
-            
+
             .alert-icon {
                 font-size: 2rem;
                 margin-right: 15px;
@@ -1280,10 +1280,10 @@
                 <div class="col-12">
                     Enhanced Signup Card with same header as login
                     <div class="mycard">
-                        
+
                         Form Body
                         <div class="login-body">
-                        
+
                         Creative Success/Error Messages
                         <div th:if="${message}">
                             <div th:switch="${message.type}">
@@ -1296,9 +1296,9 @@
                                         <h5>🎉 Registration Successful!</h5>
                                         <p th:text="${message.content}">Successfully Registered!</p>
                                         <p style="font-size: 0.9rem; margin-top: 5px;">
-                                            <i class="fas fa-arrow-right"></i> 
+                                            <i class="fas fa-arrow-right"></i>
                                             <a th:href="@{/login}" style="color: #059669; text-decoration: none; font-weight: 600;">
-                                                Login to Continue 
+                                                Login to Continue
                                             </a>
                                         </p>
                                     </div>
@@ -1306,7 +1306,7 @@
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
-                                
+
                                 Error Message
                                 <div th:case="'alert-danger'" class="creative-alert creative-danger" id="errorMessage">
                                     <div class="alert-icon danger-icon">
@@ -1316,7 +1316,7 @@
                                         <h5>⚠️ Registration Failed</h5>
                                         <p th:text="${message.content}">Something went wrong!</p>
                                         <p style="font-size: 0.9rem; margin-top: 5px;">
-                                            <i class="fas fa-lightbulb"></i> 
+                                            <i class="fas fa-lightbulb"></i>
                                             Please check your details and try again.
                                         </p>
                                     </div>
@@ -1324,31 +1324,31 @@
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
-                                
+
                                 Fallback for other message types
-                                <div th:case="*" th:class="${message.type}" 
+                                <div th:case="*" th:class="${message.type}"
                                      class="alert alert-dismissible fade show" role="alert">
                                     <strong th:text="${message.content}"></strong>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="text-center mb-4">
                             <img style="width: 100px" th:src="@{/img/member.png}" alt="Member Icon" class="mb-3" />
                             <h1 style="color: #000;">Register Here!</h1>
                             <p class="text-muted">Create your account to get started</p>
                         </div>
-                        
+
                         <form th:action="@{/do_register}" method="post" th:object="${user}">
-                            
+
                             Name Field
                             <div class="mb-4">
                                 <label for="name" class="form-label">Your Name <span class="text-danger">*</span></label>
-                                <input type="text" 
-                                       class="form-control" 
+                                <input type="text"
+                                       class="form-control"
                                        th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
-                                       id="name" 
+                                       id="name"
                                        th:field="*{name}"
                                        placeholder="Enter your full name">
                                 <div th:errors="*{name}" class="invalid-feedback">

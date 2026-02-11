@@ -1,0 +1,57 @@
+<!-- forgot_email_form.html -->
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Forgot Password</title>
+</head>
+
+<body>
+
+<section layout:fragment="content" class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+
+
+      <div th:if="${message}" class="container mt-3">
+        <div class="alert text-center"
+             th:classappend="' alert-' + ${message.type}">
+          <span th:text="${message.content}"></span>
+        </div>
+      </div>
+
+
+      <div class="card shadow p-4">
+        <h2 class="text-center mb-3">Forgot Password</h2>
+        <p class="text-muted text-center">
+          Enter your registered email address and we’ll send you a OTP.
+        </p>
+
+        <form th:action="@{/sendOTP}" method="post">
+          <div class="mb-3">
+            <label class="form-label">Email address</label>
+            <input type="email"
+                   name="email"
+                   class="form-control"
+                   placeholder="Enter your registered email"
+                   required>
+
+          </div>
+
+          <button type="submit" class="btn btn-warning w-100">
+            Send OTP
+          </button>
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

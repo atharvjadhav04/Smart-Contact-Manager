@@ -58,6 +58,15 @@
     </div>
 </nav>
 
+<!-- Flash Message Section (GLOBAL)
+<div th:if="${message}" class="container mt-3">
+    <div class="alert text-center"
+         th:classappend="' alert-' + ${message.type}">
+        <span th:text="${message.content}"></span>
+    </div>
+</div>-->
+
+
 <!-- Main Content -->
 <main class="main-content">	
     <div layout:fragment="content">

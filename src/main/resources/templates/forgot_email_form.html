@@ -8,6 +8,135 @@
 <head>
   <meta charset="UTF-8">
   <title>Forgot Password</title>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===== Creative Alert ===== */
+  .creative-alert {
+      position: relative;
+      margin: 25px auto;
+      padding: 18px 50px 18px 70px;
+      border-radius: 14px;
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      font-size: 1.05rem;
+      font-weight: 500;
+      animation: slideDown 0.5s ease;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+      overflow: hidden;
+  }
+
+  /* Icon strip */
+  .creative-alert::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: #fff;
+      font-size: 20px;
+  }
+
+  /* Message text */
+  .creative-alert-content {
+      flex: 1;
+      z-index: 1;
+  }
+
+  /* Close button */
+  .creative-alert-close {
+      background: rgba(0,0,0,0.15);
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      color: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  /* Progress bar */
+  .alert-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      animation: progress 4s linear forwards;
+  }
+
+  /* ===== Types ===== */
+
+  .alert-success-creative {
+      background: linear-gradient(135deg, #d4edda, #c3e6cb);
+      color: #155724;
+  }
+  .alert-success-creative::before {
+      background: #28a745;
+      content: "\f00c";
+  }
+  .alert-success-creative .alert-progress {
+      background: #28a745;
+  }
+
+  .alert-danger-creative {
+      background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+      color: #721c24;
+  }
+  .alert-danger-creative::before {
+      background: #dc3545;
+      content: "\f00d";
+  }
+  .alert-danger-creative .alert-progress {
+      background: #dc3545;
+  }
+
+  .alert-warning-creative {
+      background: linear-gradient(135deg, #fff3cd, #ffeeba);
+      color: #856404;
+  }
+  .alert-warning-creative::before {
+      background: #ffc107;
+      content: "\f071";
+  }
+  .alert-warning-creative .alert-progress {
+      background: #ffc107;
+  }
+
+  .alert-info-creative {
+      background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+      color: #0c5460;
+  }
+  .alert-info-creative::before {
+      background: #17a2b8;
+      content: "\f05a";
+  }
+  .alert-info-creative .alert-progress {
+      background: #17a2b8;
+  }
+
+  /* Animations */
+  @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes progress {
+      from { width: 100%; }
+      to   { width: 0%; }
+  }
+
+
+  </style>
 </head>
 
 <body>
@@ -16,13 +145,19 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
 
+      <!-- Creative Message Box -->
+      <div th:if="${message != null}"
+           class="creative-alert"
+           th:classappend="' alert-' + ${message.type} + '-creative'"
+           id="creativeMessage"
+           role="alert">
 
-      <div th:if="${message}" class="container mt-3">
-        <div class="alert text-center"
-             th:classappend="' alert-' + ${message.type}">
-          <span th:text="${message.content}"></span>
+        <div class="creative-alert-content"
+             th:text="${message.content}">
         </div>
+        <div class="alert-progress"></div>
       </div>
+
 
 
       <div class="card shadow p-4">
@@ -51,7 +186,22 @@
 
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const alertBox = document.getElementById("creativeMessage");
+
+        if (alertBox) {
+            setTimeout(() => {
+                alertBox.style.opacity = "0";
+                alertBox.style.transform = "translateY(-10px)";
+                setTimeout(() => alertBox.remove(), 300);
+            }, 4000);
+        }
+    });
+  </script>
 </section>
+
 
 </body>
 </html>

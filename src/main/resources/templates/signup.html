@@ -509,7 +509,7 @@
                         <div th:if="${message}">
                             <div th:switch="${message.type}">
                                 <!-- Success Message -->
-                                <div th:case="'alert-success'" class="creative-alert creative-success" id="successMessage">
+                                <div th:case="'success'" class="creative-alert creative-success" id="successMessage">
                                     <div class="alert-icon success-icon">
                                         <i class="fas fa-check-circle"></i>
                                     </div>
@@ -529,7 +529,7 @@
                                 </div>
                                 
                                 <!-- Error Message -->
-                                <div th:case="'alert-danger'" class="creative-alert creative-danger" id="errorMessage">
+                                <div th:case="'danger'" class="creative-alert creative-danger" id="errorMessage">
                                     <div class="alert-icon danger-icon">
                                         <i class="fas fa-exclamation-triangle"></i>
                                     </div>

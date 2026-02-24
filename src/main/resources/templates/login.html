@@ -434,6 +434,14 @@
                         
                         <!-- Login Body -->
                         <div class="login-body">
+                            <!-- Flash Message (RedirectAttributes) -->
+                            <div  th:if="${message != null}"
+                                 class="alert-custom"
+                                 th:classappend="' alert-' + ${message.type}">
+                                <i class="fas fa-info-circle"></i>
+                                <div th:text="${message.content}"></div>
+                            </div>
+
                             <!-- Success/Error Messages -->
                             <div th:if="${param.error}" class="alert-custom alert-danger">
                                 <i class="fas fa-exclamation-triangle"></i>
@@ -445,17 +453,8 @@
                             
                             <div th:if="${param.logout}" class="alert-custom alert-success">
                                 <i class="fas fa-check-circle"></i>
-                                <div>
-                                    <strong>Logged Out Successfully</strong><br>
-                               
-                                </div>
+                                <strong>Logged Out Successfully</strong><br>
                             </div>
-
-                            <div th:if="${param.logout}" class="alert-custom alert-success">
-                                <i class="fas fa-check-circle"></i>
-                                <span th:text="${param.change}" class="fw-semibold"></span>
-                            </div>
-
 
                             
                             <!-- Login Form -->
@@ -601,6 +600,7 @@
                 console.log('Remember me was already checked');
             }
         });
+
     </script>
     
     <!-- Font Awesome -->

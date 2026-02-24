@@ -65,7 +65,7 @@ public class HomeController {
             // Check agreement first (before validation)
             if (!agreement) {
                 System.out.println("Agreement not accepted");
-                attributes.addFlashAttribute("message", new Message("You must agree to terms and conditions!", "alert-danger"));
+                attributes.addFlashAttribute("message", new Message("You must agree to terms and conditions!", "danger"));
                 return "redirect:/signup";
             }
             
@@ -93,7 +93,7 @@ public class HomeController {
             User result = this.repository.save(user);
             
             // Clear the form and show success message
-            attributes.addFlashAttribute("message", new Message("Successfully Registered!", "alert-success"));
+            attributes.addFlashAttribute("message", new Message("Successfully Registered!", "success"));
             return "redirect:/signup"; 
             
         } catch (Exception e) {
@@ -101,9 +101,9 @@ public class HomeController {
             
             // Handle specific duplicate email exception
             if (e.getMessage() != null && e.getMessage().contains("Duplicate entry") && e.getMessage().contains("email")) {
-                attributes.addFlashAttribute("message", new Message("Email address already registered!", "alert-danger"));
+                attributes.addFlashAttribute("message", new Message("Email address already registered!", "danger"));
             } else {
-                attributes.addFlashAttribute("message", new Message("Something went wrong: " + e.getMessage(), "alert-danger"));
+                attributes.addFlashAttribute("message", new Message("Something went wrong: " + e.getMessage(), "danger"));
             }
             
             return "redirect:/signup";
@@ -128,7 +128,7 @@ public class HomeController {
     @PostMapping("/sendOTP")
     public String sendEmail(@RequestParam("email") String email,
                             RedirectAttributes attributes,
-                            HttpSession session){
+                            HttpSession session,RedirectAttributes redirectAttributes){
 
         Random random = new Random();
         int otp = random.nextInt(9000) + 1000;
@@ -139,17 +139,37 @@ public class HomeController {
         String to = email;
         String from = "vikijadhav40546@gmail.com";
 
-        boolean flag = this.emailService.sendEmail(message, subject, to, from);
+        boolean existEmail = this.repository.existsByEmail(email);
 
-        if (flag){
-            session.setAttribute("myotp", otp);
-            session.setAttribute("email", email);
-            session.setAttribute("message", "OTP sent successfully!");
-            return "verifyOTP";
-        } else {
-            session.setAttribute("message", "Invalid email address!");
-            return "forgot_email_form";
+        if (!existEmail) {
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    new Message("Email not registered!", "danger")
+            );
+            return "redirect:/forgot";
         }
+
+        boolean flag = this.emailService.sendEmail(message, subject, to, from);
+        if (flag){
+                session.setAttribute("myotp", otp);
+                session.setAttribute("email", email);
+            redirectAttributes.addFlashAttribute("message", new Message("OTP sent successfully!", "success"));
+            return "redirect:/verify-otp";
+        } else {
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    new Message("Failed to send OTP. Try again.", "danger")
+            );
+            return "redirect:/forgot";
+            }
+
+
+
+    }
+
+    @GetMapping("/verify-otp")
+    public String verifyOTP(){
+        return "verifyOTP";
     }
 
 
@@ -165,30 +185,30 @@ public class HomeController {
             User user = this.repository.getUserByUserName(email);
 
             if (user == null){
-                session.setAttribute("message",
-                        "No user exists with this email!");
+//               // session.setAttribute("message",
+//                  //      new Message("No user exists with this email!","danger"));
                 return "forgot_email_form";
             }
 
             return "password_change_form";
 
         } else {
-            session.setAttribute("message",
-                    "You have entered wrong OTP !!");
-            return "verifyOTP";
+            /*session.setAttribute("message", new Message("User with this Email does not exists!","danger"));*/
+            return "forgot_email_form";
         }
     }
 
     //change password
     @PostMapping("/changepassword")
-    public String changePassword(HttpSession session,@RequestParam("newpass") String newpass){
+    public String changePassword(HttpSession session,@RequestParam("newpass") String newpass,RedirectAttributes attributes){
         String email = (String)session.getAttribute("email");
         User user = this.repository.getUserByUserName(email);
         user.setPassword(this.passwordEncoder.encode(newpass));
 
         this.repository.save(user);
+        attributes.addFlashAttribute("message",new Message("password changed successfully..","success"));
 
-        return "redirect:/login?change=password changed successfully..";
+        return "redirect:/login";
     }
 
 
